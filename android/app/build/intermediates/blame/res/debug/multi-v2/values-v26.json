@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/mac2018_testing/Desktop/SchoolBuddyNew/SchoolBuddy/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v26/values-v26.xml",
+            "map": [
+                {
+                    "source": "/Users/mac2018_testing/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/e5f7c18f576c973d7fc9ba6c91f1bf22/res/values-v26/values-v26.xml",
+                    "from": {
+                        "startLines": "2,3,4,8,12,16",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "55,130,217,431,657,896",
+                        "endLines": "2,3,7,11,15,16",
+                        "endColumns": "74,86,12,12,12,92",
+                        "endOffsets": "125,212,426,652,891,984"
+                    }
+                }
+            ]
+        }
+    ]
+}
