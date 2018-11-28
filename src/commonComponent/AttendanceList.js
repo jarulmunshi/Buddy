@@ -10,7 +10,8 @@ import {Card, CardSection} from './Common'
 import {MyriadFont,WindowsWidth} from './global'
 
 const AttendanceList = (props) => {
-    const {id, rollNo, name, present, color} =props.notesInfo
+    const {id, Student_id, name, present} =props.notesInfo;
+    const color = 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')';
     debugger
     return(
         <Card>
@@ -18,13 +19,13 @@ const AttendanceList = (props) => {
                 <View style={[styles.colorView, {backgroundColor: color}]}></View>
 
                 <View style={styles.listContainerStyle}>
-                    <Text style={[styles.nameStyle, {width: WindowsWidth*0.1, padding: 10,}]}>{rollNo}</Text>
+                    <Text style={[styles.nameStyle, {width: WindowsWidth*0.1, padding: 10,}]}>{Student_id}</Text>
 
                     <View style={styles.dataRow}>
                         <Text style={styles.nameStyle}>{name}</Text>
                         <Switch
                             defaultValue={true}
-                            value={present}
+                            value={present === undefined ? 1 : present}
                             activeText={'P'}
                             inactiveText={'A'}
                             activeTextColor={'#FFF'}

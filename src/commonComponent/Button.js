@@ -17,7 +17,8 @@ const buttonStyles={
         width:WindowsWidth * 0.8,
         borderWidth:1,
         height:48,
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     textStyle:{
         fontSize:16,

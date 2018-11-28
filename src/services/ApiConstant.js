@@ -7,4 +7,10 @@ module.exports={
     //baseUrl:'http://eeebef04.ngrok.io',
     changePassword: '/user/changePassword',
     login:'/user/userLogin',
+    timeTable:'/timeTable/teacherSchedule/schedule',
+    todayAttendance:'/attendance/',
+    dateWiseAttendance:'/attendance/date/',
+    classNotes:'/notes/teacher',
+    complain:'/complain/',
+    complainParent:'/complain/parent'
 };

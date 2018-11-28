@@ -9,8 +9,11 @@ import {Card, CardSection} from './Common'
 import {MyriadFont, WindowsWidth} from './global'
 
 const ClassNotesInfo = (props) => {
-    const {title, description, createdDate, color} =props.notesInfo
-
+    let monthShortName = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct', 'Nov', 'Dec'];
+    const {title, description, createdAt} =props.notesInfo;
+    const color = 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
+    const d = new Date(createdAt);
+    const date = d.getDate() +" "+ monthShortName[d.getMonth()] +" "+ d.getFullYear();
     return(
         <Card>
             <CardSection>
@@ -21,7 +24,7 @@ const ClassNotesInfo = (props) => {
 
                     <Text style={styles.descriptionText}>{description}</Text>
 
-                    <Text style={[styles.descriptionText, {alignSelf: 'flex-end', fontSize: 16}]}>{createdDate}</Text>
+                    <Text style={[styles.descriptionText, {alignSelf: 'flex-end', fontSize: 16}]}>{date}</Text>
                 </View>
 
             </CardSection>

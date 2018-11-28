@@ -12,7 +12,7 @@ export function callApi(url,type='get',data={},header={}) {
             .catch((err) => {
                 debugger;
                 console.log("Api error");
-                return Promise.reject(err);
+                return Promise.reject(err.response);
             });
     }else if(type === 'post') {
         debugger;

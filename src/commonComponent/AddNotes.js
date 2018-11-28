@@ -5,19 +5,19 @@ import {
     Text,
     Alert,
     Image,
-    Platform
+    Platform,
+    Modal
 } from 'react-native'
 
 import {WindowsHeight, WindowsWidth, MyriadFont} from '../commonComponent/global';
 import {Input, Button} from './Common'
-
 const AddNote = (props) => {
     return(
         <View style={{backgroundColor:'rgba(0,0,0,0.5)', height: WindowsHeight, width: WindowsWidth, position: 'absolute'}}>
-        <TouchableOpacity style={{height: 40, position: 'absolute', top: Platform.OS === 'ios'? 50 : 0, right: 5}} onPress={props.toggle}>
+        <TouchableOpacity style={{height: 50, position: 'absolute', zIndex: 1000,top: Platform.OS === 'ios'? 50 : 0, right: 5}} onPress={props.toggle}>
             <Image source={require('../images/close.png')}></Image>
         </TouchableOpacity>
-            <View style={{height:WindowsHeight-40,width:WindowsWidth,position:'absolute',top: 40,justifyContent:'center',alignItems:'center'}}>
+            <View style={{height:WindowsHeight-50,width:WindowsWidth,position:'absolute',top: 50,justifyContent:'center',alignItems:'center'}}>
                 <View style={styles.viewContainer}>
                 <View style={styles.headingContainer}>
                     <Text style={styles.textStyle}>{props.heading}</Text>

@@ -6,46 +6,46 @@ import {
     ScrollView,
     Alert,
     Image,
-    SafeAreaView
+    SafeAreaView, AsyncStorage
 } from 'react-native'
 import FAB from 'react-native-fab'
 
 import {WindowsHeight, WindowsWidth,DisplayAreaView} from '../commonComponent/global';
 import {Header, Footer, CustomMenu, CalendarView, ClassNotesInfo, AddNote, AttendanceList} from '../commonComponent/Common'
 import Color from '../helper/theme/Color'
+import {callApi} from "../services/ApiCall";
+import ApiConstant from "../services/ApiConstant";
 
 var date = new Date();
 
 let monthShortName = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct', 'Nov', 'Dec']
 
 export default class ManageClass extends Component{
+    constructor(props){
+        super(props);
+        this.getData();
+    }
+
+    getData = async () =>{
+        const val = await AsyncStorage.getItem("detail");
+        let ans = JSON.parse(val);
+        callApi(ApiConstant.baseUrl+ApiConstant.classNotes,'get',{},
+            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+            console.log(res);
+            if(res.success === 1){
+                this.setState({notesList: res.response})
+            }
+            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
+        }).catch((err)=>{
+            Alert.alert(err.data.error);
+        })
+    };
+
     state = {
         active: 'Attendance',
         isBack:true,
         iName:"bars",
-        notesList: [
-            {
-                'id': 1,
-                'title':'Last date of Exam form 23 nov 2018',
-                'description':'Loream Ipsum is simply dummy text of the printing and testing industry. Loream Ipsum is simply dummy text of the printing and testing industry.',
-                'createdDate':'12 Nov 2018',
-                'color':'red'
-            },
-            {
-                'id': 2,
-                'title':'Last date of Exam form 23 nov 2018',
-                'description':'Loream Ipsum is simply dummy text of the printing and testing industry. Loream Ipsum is simply dummy text of the printing and testing industry.',
-                'createdDate':'12 Nov 2018',
-                'color':'blue'
-            },
-            {
-                'id': 3,
-                'title':'Last date of Exam form 23 nov 2018',
-                'description':'Loream Ipsum is simply dummy text of the printing and testing industry. Loream Ipsum is simply dummy text of the printing and testing industry.',
-                'createdDate':'12 Nov 2018',
-                'color':'green'
-            }
-        ],
+        notesList: [],
         showCalendar: false,
         showAddNote: false,
         attendanceList: [],
@@ -56,67 +56,21 @@ export default class ManageClass extends Component{
         absent: 0,
     }
 
-    componentWillMount(){
-        this.setState({
-            attendanceList: [
-                {
-                    "id":1,
-                    "rollNo":1,
-                    "name":"VIJAY PATEL",
-                    "present":true,
-                    "color": "red",
-                },
-                {
-                    "id":2,
-                    "rollNo":2,
-                    "name":"PARTH PATEL",
-                    "present":true,
-                    "color": "green",
-                },
-                {
-                    "id":3,
-                    "rollNo":3,
-                    "name":"KESHAV SHAH",
-                    "present":true,
-                    "color": "yellow",
-                },
-                {
-                    "id":4,
-                    "rollNo":4,
-                    "name":"ADITI SHARMA",
-                    "present":true,
-                    "color": "pink",
-                },
-                {
-                    "id":5,
-                    "rollNo":5,
-                    "name":"RADHIKA JAIN",
-                    "present":true,
-                    "color": "blue",
-                },
-                {
-                    "id":6,
-                    "rollNo":6,
-                    "name":"JINAL JAIN",
-                    "present":true,
-                    "color": "purple",
-                },
-                {
-                    "id":7,
-                    "rollNo":7,
-                    "name":"SWEETY SINGH",
-                    "present":true,
-                    "color": "grey",
-                },
-                {
-                    "id":8,
-                    "rollNo":8,
-                    "name":"SWATI EZHAVA",
-                    "present":true,
-                    "color": "black",
-                },
-            ]
+    componentWillMount = async () =>{
+        const val = await AsyncStorage.getItem("detail");
+        let ans = JSON.parse(val);
+        callApi(ApiConstant.baseUrl+ApiConstant.todayAttendance,'get',{},
+            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+                console.log(res);
+            if(res.success === 1){
+                this.setState({attendanceList: res.response})
+            }
+            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
+        }).catch((err)=>{
+            //console.log(err);
+            Alert.alert(err.data.error);
         })
+
     }
 
     componentDidMount(){
@@ -172,19 +126,27 @@ export default class ManageClass extends Component{
         )
     }
 
-    addNote(title, description){
-        let newState = Object.assign({}, this.state);
-        let newNote = {
-            'id': 8,
-            'title': title,
-            'description': description,
-            'createdDate': date.getDate()+" "+monthShortName[date.getMonth()]+" "+date.getFullYear(),
-            'color': 'rgb('+Math.round(Math.random()*255)+','+Math.round(Math.random()*255)+','+Math.round(Math.random()*255)+')'
-            //'#'+(Math.random()*0xFFFFFF<<0).toString(16) generating random color
-
-        }
-        newState.notesList.push(newNote)
-        this.setState(newState);
+    addNote = async (title, description)=>{
+        const val = await AsyncStorage.getItem("detail");
+        let ans = JSON.parse(val);
+        const data={
+            title:title,
+            description:description
+        };
+        debugger;
+        callApi(ApiConstant.baseUrl+ApiConstant.classNotes,'post',data,
+            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+                debugger
+            console.log('=====',res.data);
+            if(res.data.success === 1)
+            {
+                this.setState({notesList: [ ...this.state.notesList,res.data.response]})
+            }
+            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
+        }).catch((err)=>{
+            //console.log(err);
+            Alert.alert(err.data.error);
+        });
         this.setState({showAddNote: false, title: '', description: ''})
     }
 
@@ -204,12 +166,27 @@ export default class ManageClass extends Component{
         this.props.navigation.openDrawer();
     };
 
-    changeDate(day, month, year){
+    changeDate=async (day, month, year)=>{
         this.setState({
             todayDate: day+" "+monthShortName[month-1]+" "+year,
+            dateToday: year+"-"+month+"-"+day,
             showCalendar: false,
+        });
+        const val = await AsyncStorage.getItem("detail");
+        let ans = JSON.parse(val);
+        callApi(ApiConstant.baseUrl+ApiConstant.dateWiseAttendance + `${this.state.dateToday}`,'get',{},
+            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+            console.log(res);
+             if(res.success === 1){
+                 this.setState({attendanceList: res.response})
+             }
+            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
+        }).catch((err)=>{
+            //console.log(err);
+            Alert.alert(err.data.error);
         })
-    }
+
+    };
 
     render(){
         return(

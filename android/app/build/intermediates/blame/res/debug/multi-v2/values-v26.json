@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/mac2018_testing/Desktop/SchoolBuddyNew/SchoolBuddy/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v26/values-v26.xml",
+            "outputFile": "/Users/mac2018_testing/Desktop/Jarul/Buddy/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v26/values-v26.xml",
             "map": [
                 {
                     "source": "/Users/mac2018_testing/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/e5f7c18f576c973d7fc9ba6c91f1bf22/res/values-v26/values-v26.xml",

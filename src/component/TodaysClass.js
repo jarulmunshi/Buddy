@@ -5,8 +5,8 @@ import {
     TouchableOpacity,
     ScrollView,
     Alert,
-    SafeAreaView, StatusBar
-} from 'react-native'
+    SafeAreaView, StatusBar, AsyncStorage
+} from 'react-native';
 import FAB from 'react-native-fab'
 
 import Color from '../helper/theme/Color'
@@ -20,58 +20,34 @@ import {
     Header,
     TodayClassInfo
 } from '../commonComponent/Common'
+import {callApi} from "../services/ApiCall";
+import ApiConstant from "../services/ApiConstant";
 
 export default class TodaysClass extends Component{
 
     state = {
         active: 'Class',
-        classList: [
-            {
-                "standard": "11th",
-                "className": "A",
-                "sname":"Mathematics",
-                "timing": "10:00",
-                "color":"red"
-            },
-            {
-                "standard": "12th",
-                "className": "A",
-                "sname":"Science",
-                "timing": "10:30",
-                "color":"green"
-            },
-            {
-                "standard": "10th",
-                "className": "A",
-                "sname":"English",
-                "timing": "11:10",
-                "color":"blue"
-            },
-            {
-                "standard": "08th",
-                "className": "A",
-                "sname":"Science",
-                "timing": "11:40",
-                "color":"pink"
-            },
-            {
-                "standard": "09th",
-                "className": "A",
-                "sname":"Mathemetics",
-                "timing": "12:10",
-                "color":"grey"
-            },
-            {
-                "standard": "11th",
-                "className": "A",
-                "sname":"English",
-                "timing": "01:00",
-                "color":"red"
-            },
-        ],
+        classList: [],
         iName:"bars",
         isBack:true
     };
+
+    componentWillMount = async () =>{
+        const val = await AsyncStorage.getItem("detail");
+        let ans = JSON.parse(val);
+        callApi(ApiConstant.baseUrl+ApiConstant.timeTable,'get',{},
+            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+            if(res.success === 1){
+                this.setState({classList: res.response})
+            }
+            // console.log("---********----");
+            // console.log(this.state.classList);
+            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
+        }).catch((err)=>{
+            //console.log(err);
+            Alert.alert(err.data.error);
+        })
+    }
 
     changeActiveState(value){
         this.setState({

@@ -5,29 +5,36 @@ import {
     Image
 } from 'react-native'
 import Color from './../helper/theme/Color';
-import {Card, CardSection} from './Common'
-import {WindowsWidth,MyriadFont} from './global'
+import {Card, CardSection} from './Common';
+import {WindowsWidth,MyriadFont} from './global';
 
 const TodayClassInfo = (props) => {
-    const {standard, sname, color , timing , className} =props.classInfo;
-
+    const {standard, subject , start_time , division} =props.classInfo;
+    const color = 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
+    var textColor = "";
     return(
         <Card>
             <CardSection>
                 <View style={[styles.colorView, {backgroundColor: color}]}></View>
 
                 <View style={styles.timingContainer}>
-                    <Text style={styles.standardContainer}>{timing}</Text>
+                    <Text style={styles.standardContainer}>{start_time}</Text>
                 </View>
 
                 <View style={styles.additionalInfoContainer}>
-                    <View style={{ justifyContent: 'space-between'}}>
+                    <View style={{justifyContent: 'space-between'}}>
                         <View style={{alignItems:'flex-end', marginRight: 10}}>
                             <View style={{flexDirection: 'row'}}>
                                 <Text style={styles.classContainer}>{standard}</Text>
-                                <Text style={styles.divisonContainer}> {className}</Text>
+                                {standard > 2 &&<Text>th</Text>||<Text>rd</Text>}
+                                {division ==='A' &&
+                                <Text style={[styles.divisonContainer,{color:'rgb(229,115,23)'}]}> {division}</Text> ||
+                                division === 'B' &&<Text style={[styles.divisonContainer,{color:'rgb(128,192,105)'}]}> {division}</Text> ||
+                                <Text style={[styles.divisonContainer,{color:'rgb(102,183,189)'}]}> {division}</Text>
+                                }
+
                             </View>
-                            <Text style={styles.nameContainer}>{sname}</Text>
+                            <Text style={styles.nameContainer}>{subject}</Text>
                         </View>
                     </View>
                 </View>
@@ -42,7 +49,8 @@ const styles = {
     },
     timingContainer: {
         padding: 10,
-        width: WindowsWidth * 55 /100
+        width: WindowsWidth * 55 /100,
+        justifyContent: 'center'
     },
     additionalInfoContainer: {
         padding: 10,
@@ -66,7 +74,6 @@ const styles = {
         fontFamily: MyriadFont
     },
     divisonContainer: {
-        color: 'rgb(229,115,23)',
         fontSize: 25,
         marginTop: 5,
         fontFamily: MyriadFont

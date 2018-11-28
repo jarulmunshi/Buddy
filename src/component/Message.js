@@ -4,12 +4,14 @@ import {
     Text,
     ScrollView,
     SafeAreaView,
-    AsyncStorage
+    AsyncStorage, Alert
 } from 'react-native'
 import FAB from 'react-native-fab'
 
 import {DisplayAreaView} from '../commonComponent/global';
 import {Header, Footer, ClassNotesInfo, AddNote,} from '../commonComponent/Common'
+import {callApi} from "../services/ApiCall";
+import ApiConstant from "../services/ApiConstant";
 
 var date = new Date();
 
@@ -21,36 +23,31 @@ export default class Message extends Component{
         iName:"bars",
         title: '',
         description: '',
-        messageList: [
-            {
-                'id': 1,
-                'title':'Last date of Exam form 23 nov 2018',
-                'description':'Loream Ipsum is simply dummy text of the printing and testing industry. Loream Ipsum is simply dummy text of the printing and testing industry.',
-                'createdDate':'12 Nov 2018',
-                'color':'red'
-            },
-            {
-                'id': 2,
-                'title':'Last date of Exam form 23 nov 2018',
-                'description':'Loream Ipsum is simply dummy text of the printing and testing industry. Loream Ipsum is simply dummy text of the printing and testing industry.',
-                'createdDate':'12 Nov 2018',
-                'color':'blue'
-            },
-            {
-                'id': 3,
-                'title':'Last date of Exam form 23 nov 2018',
-                'description':'Loream Ipsum is simply dummy text of the printing and testing industry. Loream Ipsum is simply dummy text of the printing and testing industry.',
-                'createdDate':'12 Nov 2018',
-                'color':'green'
-            }
-        ],
+        messageList: [],
         showAddMessage: false,
-        showFab: false
+        showFab: true
     }
 
     constructor(props){
-        super(props)
-        this.getRole()
+        super(props);
+        this.getRole();
+        this.getComplain()
+    }
+
+    getComplain = async ()=>{
+        const val = await AsyncStorage.getItem("detail");
+        let ans = JSON.parse(val);
+        callApi(ApiConstant.baseUrl+ApiConstant.complainParent,'get',{},
+            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+            console.log(res);
+            if(res.success === 1){
+                this.setState({messageList: res.response})
+            }
+            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
+        }).catch((err)=>{
+            //console.log(err);
+            Alert.alert(err.data.error);
+        })
     }
 
     getRole = async () => {
@@ -72,17 +69,26 @@ export default class Message extends Component{
         })
     }
 
-    addMessage(title, description){
-        let newState = Object.assign({}, this.state);
-        let newMessage = {
-            'id': 8,
-            'title': title,
-            'description': description,
-            'createdDate': date.getDate()+" "+monthShortName[date.getMonth()]+" "+date.getFullYear(),
-            'color': 'rgb('+Math.round(Math.random()*255)+','+Math.round(Math.random()*255)+','+Math.round(Math.random()*255)+')'
-        }
-        newState.messageList.push(newMessage)
-        this.setState(newState);
+    addMessage=async (title, description)=>{
+        const val = await AsyncStorage.getItem("detail");
+        let ans = JSON.parse(val);
+        const data={
+            title:title,
+            description:description
+        };
+        debugger;
+        callApi(ApiConstant.baseUrl+ApiConstant.complain,'post',data,
+            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+            console.log('=====',res.data);
+            if(res.data.success === 1)
+            {
+                this.setState({messageList: [ ...this.state.messageList,res.data.response]})
+            }
+            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
+        }).catch((err)=>{
+            //console.log(err);
+            Alert.alert(err.data.error);
+        });
         this.setState({showAddMessage: false, showFab: true, title: '', description: ''})
     }
 
