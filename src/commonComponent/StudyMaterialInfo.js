@@ -10,16 +10,16 @@ import {Card, CardSection} from './Common'
 import {WindowsWidth,MyriadFont} from './global'
 
 const StudyMaterialInfo = (props) => {
-    const {standard, sname, color , timing , className} =props.classInfo;
-
+    const {standard, subject, subject_id , division_id , division} =props.classInfo;
+    const color = 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
     return(
         <Card>
-            <TouchableOpacity onPress={()=>props.onBackButtonPress()}>
+            <TouchableOpacity onPress={()=> props.onBackButtonPress(subject_id,division_id)}>
                 <CardSection>
                     <View style={[styles.colorView, {backgroundColor: color}]}></View>
 
                     <View style={styles.infoContainer}>
-                        <Text style={styles.standardContainer}>{sname}</Text>
+                        <Text style={styles.standardContainer}>{subject}</Text>
                     </View>
 
                     <View style={styles.additionalInfoContainer}>
@@ -27,7 +27,12 @@ const StudyMaterialInfo = (props) => {
                             <View style={{alignItems:'flex-end', marginRight: 10}}>
                                 <View style={{flexDirection: 'row'}}>
                                     <Text style={styles.classContainer}>{standard}</Text>
-                                    <Text style={styles.divisonContainer}> {className}</Text>
+                                    {standard > 2 &&<Text>th</Text>||<Text>rd</Text>}
+                                    {division ==='A' &&
+                                    <Text style={[styles.divisonContainer,{color:'rgb(229,115,23)'}]}> {division}</Text> ||
+                                    division === 'B' &&<Text style={[styles.divisonContainer,{color:'rgb(128,192,105)'}]}> {division}</Text> ||
+                                    <Text style={[styles.divisonContainer,{color:'rgb(102,183,189)'}]}> {division}</Text>
+                                    }
                                 </View>
                             </View>
                         </View>

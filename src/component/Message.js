@@ -51,9 +51,10 @@ export default class Message extends Component{
     }
 
     getRole = async () => {
-        const userRole = await AsyncStorage.getItem("role")
-
-        if(userRole === 'parent'){
+        // const userRole = await AsyncStorage.getItem("role")
+        const userRole = await AsyncStorage.getItem("detail");
+        console.log("//////",userRole);
+        if(userRole.role === 'parent'){
             this.setState({
                 showFab: true
             })
@@ -82,7 +83,7 @@ export default class Message extends Component{
             console.log('=====',res.data);
             if(res.data.success === 1)
             {
-                this.setState({messageList: [ ...this.state.messageList,res.data.response]})
+                this.setState({messageList: [res.data.response,...this.state.messageList]})
             }
             //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
         }).catch((err)=>{

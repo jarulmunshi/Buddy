@@ -12,5 +12,7 @@ module.exports={
     dateWiseAttendance:'/attendance/date/',
     classNotes:'/notes/teacher',
     complain:'/complain/',
-    complainParent:'/complain/parent'
+    complainParent:'/complain/parent',
+    studyMaterial:'/studyMaterial',
+    studyMaterialSubject:'/studyMaterial/teacher/materials/'
 };

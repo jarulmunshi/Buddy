@@ -19,58 +19,69 @@ import {
 } from '../commonComponent/Common'
 import StudyMaterial from "./StudyMaterial";
 import RNFetchBlob from 'react-native-fetch-blob'
-
+import {DocumentPicker,DocumentPickerUtil} from 'react-native-document-picker';
+var data=[];
 export default class File extends Component{
 
-
     constructor(props){
-        super(props)
+        super(props);
+        //data = props.navigation.state.params.data;
         this.state = {
             active: 'Class',
-            classList: [
-                {
-                    "date": "23 NOV 2018",
-                    "head":"SEMESTER 1 CHAPTER 1-3",
-                    "color":"red",
-                    "isactive":"1"
-                },
-                {
-                    "date": "23 NOV 2018",
-                    "head":"SEMESTER 1 CHAPTER 1-3",
-                    "color":"green",
-                    "isactive":"1"
-                },
-                {
-                    "date": "23 NOV 2018",
-                    "head":"SEMESTER 1 CHAPTER 1-3",
-                    "color":"blue",
-                    "isactive":"1"
-                },
-                {
-                    "date": "23 NOV 2018",
-                    "head":"SEMESTER 1 CHAPTER 1-3",
-                    "color":"orange",
-                    "isactive":"1"
-                }
-            ],
+            materialList: [],
             iName:'long-arrow-left',
             isBack:true,
             isIcon:true,
-            uploadFile: false
+            uploadFile: false,
+            deleteShow: false
         };
-
 
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
         this.getRole()
     }
 
-    getRole = async () => {
-        const userRole = AsyncStorage.getItem("role")
-
+    componentDidMount=async ()=>{
         debugger
-        if(userRole === 'teacher'){
+        const val = await AsyncStorage.getItem("files");
+        let ans = JSON.parse(val);
+        if (ans) {
+            console.log("ans----",ans);
+            this.setState({materialList: ans});
+        }
+        else {
+            debugger;
+            //await AsyncStorage.removeItem("files");
+            //this.setState({materialList: []});
+        }
+
+    };
+
+    showPicker = () => {
+        console.log("Document Picker");
+        DocumentPicker.show({
+            filetype: [DocumentPickerUtil.pdf()],
+        },(error,res) => {
+            // Android
+            console.log(
+                res.uri,
+                res.type, // mime type
+                res.fileName,
+                res.fileSize
+            );
+        });
+
+    };
+    getRole = async () => {
+        //const userRole = AsyncStorage.getItem("role")
+        const val = await AsyncStorage.getItem("detail");
+        let ans = JSON.parse(val);
+        //const userRole = AsyncStorage.getItem("detail")
+        //console.log("----",ans.response.role);
+        debugger
+        if(ans.response.role === 'Teacher'){
             this.setState({
-                uploadFile: true
+                uploadFile: true,
+                deleteShow: true
             })
         }
     }
@@ -92,11 +103,29 @@ export default class File extends Component{
         this.props.navigation.navigate('StudyMaterial');
     };
 
-    renderClassInfo(){
-        const userRole = AsyncStorage.getItem("role")
+    renderEmptySection = () =>{
+        return(
+            <View style={{marginTop: 20}}>
+                <Card>
+                    <CardSection>
+                        <View style={[styles.colorView, {backgroundColor: 'red'}]}/>
 
-        return this.state.classList.map(classInfo =>
-            <FileInfo key={classInfo.standard} classInfo={classInfo} deleteshow={userRole} delete={(id) => this.deleteFile(id)}
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.standardContainer}>No Note Available</Text>
+                        </View>
+                    </CardSection>
+                </Card>
+            </View>
+        )
+    }
+
+    renderClassInfo(){
+        //const userRole = AsyncStorage.getItem("role")
+        console.log("dfhg",this.state.classList);
+        //console.log("dfhg",this.state.classList);
+        const userRole = AsyncStorage.getItem("detail");
+        return this.state.materialList.map(classInfo =>
+            <FileInfo key={classInfo.id} classInfo={classInfo} deleteshow={this.state.deleteShow} delete={(id) => this.deleteFile(id)}
                       downloadFile={(id) => this.downloadFile(id)}/>
         )
     }
@@ -138,6 +167,7 @@ export default class File extends Component{
                     isIcon={this.state.isIcon}
                     onBackButtonPress={this.goBack}
                     uploadFile={this.state.uploadFile}
+                    showPicker={this.showPicker}
                 />
 
                 <View style={{marginTop: 10, height: DisplayAreaView}}>

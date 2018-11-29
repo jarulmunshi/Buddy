@@ -13,14 +13,11 @@ import {NavigationActions, StackActions} from "react-navigation";
 
 
 const FileInfo = (props) => {
-    const {head, date, color,isactive,deleteshow} = props.classInfo;
-
-
+    const {image_url, createdAt,id} = props.classInfo;
+    const color = 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
     debugger
     return(
         <Card>
-
-            {isactive == "1" &&
                 <CardSection>
 
                     <View style={[styles.colorView, {backgroundColor: color}]}></View>
@@ -28,8 +25,8 @@ const FileInfo = (props) => {
                         <Image style={styles.imageContainer1} source={require('../images/pdf.png')}/>
                     </View>
                     <View style={styles.infoContainer}>
-                        <Text style={styles.classContainer}>{head}</Text>
-                        <Text style={styles.divisonContainer}> {date}</Text>
+                        <Text style={styles.classContainer}>{image_url}</Text>
+                        <Text style={styles.divisonContainer}> {createdAt}</Text>
                     </View>
                     <View style={styles.additionalInfoContainer}>
                         <View style={{justifyContent: 'space-between'}}>
@@ -37,7 +34,7 @@ const FileInfo = (props) => {
                                 <View style={{flexDirection: 'row'}}>
 
 
-                                    {deleteshow === true &&
+                                    {props.deleteshow === true &&
 
                                     <TouchableOpacity onPress={() => {
                                         Alert.alert(
@@ -72,7 +69,6 @@ const FileInfo = (props) => {
                     </View>
 
                 </CardSection>
-                 || <CardSection/>}
         </Card>
     )
 };

@@ -62,8 +62,8 @@ const Header = (props) =>{
 
                     {
                         props.uploadFile &&
-                        <TouchableWithoutFeedback onPress={()=>{}}>
-                            <Image style={imageContainer1} source={require('../images/cloudUp.png')}/>
+                        <TouchableWithoutFeedback onPress={()=>{props.showPicker()}}>
+                            <Image style={imageContainer1} source={require('../images/cloudUp.png')} resizeMode="contain"/>
                         </TouchableWithoutFeedback>
                     }
                 </View>
@@ -107,7 +107,7 @@ const headerStyles={
         textAlign: 'center',
     },
     imageContainer1: {
-        width: 25,
+        width: 30,
         height: 25,
         alignSelf: 'center'
     }

@@ -5,7 +5,7 @@ import {
     TouchableOpacity,
     ScrollView,
     Alert,
-    SafeAreaView, StatusBar
+    SafeAreaView, StatusBar, AsyncStorage
 } from 'react-native'
 import Color from '../helper/theme/Color'
 import {DisplayAreaView} from '../commonComponent/global';
@@ -15,53 +15,41 @@ import {
     Header,
     TodayClassInfo
 } from '../commonComponent/Common'
+import {callApi} from "../services/ApiCall";
+import ApiConstant from "../services/ApiConstant";
 
 export default class StudyMaterial extends Component{
 
     state = {
         active: 'Class',
-        classList: [
-            {
-                "standard": "",
-                "className": "",
-                "sname":"MATHS",
-                "color":"red"
-            },
-            {
-                "standard": "",
-                "className": "",
-                "sname":"PHYSICS",
-                "color":"green"
-            },
-            {
-                "standard": "",
-                "className": "",
-                "sname":"ENGLISH",
-                "color":"blue"
-            },
-            {
-                "standard": "",
-                "className": "",
-                "sname":"HINDI",
-                "color":"pink"
-            },
-            {
-                "standard": "",
-                "className": "",
-                "sname":"BIOLOGY",
-                "color":"grey"
-            },
-            {
-                "standard": "",
-                "className": "",
-                "sname":"CHEMISTRY",
-                "color":"red"
-            },
-        ],
+        classList: [],
         iName:"bars",
-        isBack:true
+        isBack:true,
+        dataList: []
     };
+    displayClasslist = async () =>{
+        const val = await AsyncStorage.getItem("detail");
+        let ans = JSON.parse(val);
+        callApi(ApiConstant.baseUrl+ApiConstant.studyMaterial,'get',{},
+            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+            console.log(res);
+            if(res.success === 1){
+                this.setState({classList: res.response});
+                await AsyncStorage.setItem("data",JSON.stringify(res.response));
+            }else{
+                // Alert.alert(res.error);
+                // await AsyncStorage.setItem("data",JSON.stringify(res.error));
+            }
 
+        }).catch((err)=>{
+            //console.log(err);
+            Alert.alert(err.data.error);
+        })
+
+    };
+    componentWillMount(){
+        this.displayClasslist();
+    }
     changeActiveState(value){
         this.setState({
             active: value
@@ -72,13 +60,32 @@ export default class StudyMaterial extends Component{
         this.props.navigation.openDrawer();
     };
 
-    goNext=()=>{
-        this.props.navigation.navigate('File');
+    goNext=async (sid,did)=>{
+        debugger
+        const val = await AsyncStorage.getItem("detail");
+        let ans = JSON.parse(val);
+        callApi(ApiConstant.baseUrl+ApiConstant.studyMaterialSubject + `${sid}` + `/${did}`,'get',{},
+            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+                console.log(res);
+            if(res.success === 1){
+                debugger
+                await AsyncStorage.setItem("files",JSON.stringify(res.response));
+                this.props.navigation.navigate('File');
+            }else {
+                debugger
+                await AsyncStorage.removeItem("files");
+                this.props.navigation.navigate('File');
+            }
+        }).catch((err)=>{
+            console.log(err);
+            //Alert.alert(err.data.error);
+        });
     };
     renderClassInfo(){
+        debugger
         return this.state.classList.map(classInfo =>
             <StudyMaterialInfo key={classInfo.standard} classInfo={classInfo}
-                               onBackButtonPress={this.goNext}/>
+                               onBackButtonPress={(sid, did) => this.goNext(sid, did)}/>
         )
     };
 
