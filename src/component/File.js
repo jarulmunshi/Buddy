@@ -42,7 +42,7 @@ export default class File extends Component{
             uploadFile: false,
             deleteShow: false,
             flag:1,
-            url:''
+            url:'',
         };
 
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -56,12 +56,6 @@ export default class File extends Component{
             if(error){
                 Alert.alert(error)
             }else {
-                // Android
-                // const data={
-                //     subject_id:s_id,
-                //     division_id:d_id,
-                //     media:res
-                // };
                 console.log(typeof(files));
                 files=res;
                 console.log(typeof(files));
@@ -72,31 +66,15 @@ export default class File extends Component{
                 console.log("0123456",bodyFormData);
                 const userDetail = await AsyncStorage.getItem("detail");
                 let userData = JSON.parse(userDetail);
-                debugger
-                // axios({
-                //     method: 'post',
-                //     url: ApiConstant.baseUrl + ApiConstant.studyMaterial,
-                //     data: bodyFormData,
-                //     headers: { 'Accept': 'application/json',
-                //         'Content-Type': 'multipart/form-data',"Authorization": userData.token }
-                // })
-                //     .then(function (response) {
-                //         //handle success
-                //         console.log(response);
-                //     })
-                //     .catch(function (response) {
-                //         //handle error
-                //         console.log(response);
-                //     });
 
                 callApi(ApiConstant.baseUrl + ApiConstant.studyMaterial ,'post',bodyFormData,
                     {'Accept': 'application/json',
                     "content-type":'multipart/form-data',"Authorization":userData.token}).then( async (res)=> {
                     console.log("0123",res);
                     if(res.success === 1){
-                        console.log("done");
+                        console.log(res);
                     }else {
-                        console.log("not done");
+                        console.log(res);
                     }
                 }).catch((err)=>{
                     console.log(err);
@@ -180,13 +158,26 @@ export default class File extends Component{
         )
     }
 
-    deleteFile(id){
-        debugger
-        let i = 2
-
-        const filteredItems = this.state.classList.slice(0, i-1).concat(this.state.classList.slice(i, this.state.classList.length))
-
-        this.setState({classList:filteredItems })
+    deleteFile=async (res)=>{
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
+        callApi(ApiConstant.baseUrl + ApiConstant.studyMaterialRemove + `${res.id}`,'delete',{},
+            {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
+            console.log(res);
+            if(res.success === 1){
+                Alert.alert("File deleted successfully..!");
+            }else {
+                console.log(res);
+            }
+        }).catch((err)=>{
+            console.log(err);
+            //Alert.alert(err.data.error);
+        });
+        // let i = 2
+        //
+        // const filteredItems = this.state.classList.slice(0, i-1).concat(this.state.classList.slice(i, this.state.classList.length))
+        //
+        // this.setState({classList:filteredItems })
     }
 
     downloadFile(id){

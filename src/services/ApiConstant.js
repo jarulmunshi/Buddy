@@ -17,4 +17,5 @@ module.exports={
     studyMaterialSubject:'/studyMaterial/teacher/materials/',
     studyMaterialStudent:'/studyMaterial/student/lectures',
     studyMaterialStudentSubject:'/studyMaterial/student/materials/',
+    studyMaterialRemove:'/studyMaterial/Media/'
 };
