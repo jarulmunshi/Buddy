@@ -23,7 +23,9 @@ import RNFetchBlob from 'react-native-fetch-blob'
 import {DocumentPicker,DocumentPickerUtil} from 'react-native-document-picker';
 import {callApi} from "../services/ApiCall";
 import ApiConstant from "../services/ApiConstant";
-var data=[];
+import axios from 'axios';
+
+var data=[],files=[];
 let s_id,d_id;
 export default class File extends Component{
     constructor(props){
@@ -39,7 +41,8 @@ export default class File extends Component{
             isIcon:true,
             uploadFile: false,
             deleteShow: false,
-            flag:1
+            flag:1,
+            url:''
         };
 
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -49,17 +52,56 @@ export default class File extends Component{
     showPicker = () => {
         DocumentPicker.show({
             filetype: [DocumentPickerUtil.pdf()],
-        },(error,res) => {
+        },async (error,res) => {
             if(error){
                 Alert.alert(error)
             }else {
                 // Android
-                console.log(
-                    res.uri,
-                    res.type, // mime type
-                    res.fileName,
-                    res.fileSize
-                );
+                // const data={
+                //     subject_id:s_id,
+                //     division_id:d_id,
+                //     media:res
+                // };
+                console.log(typeof(files));
+                files=res;
+                console.log(typeof(files));
+                var bodyFormData = new FormData();
+                bodyFormData.append('subject_id',s_id);
+                bodyFormData.append('division_id',d_id);
+                bodyFormData.append('media', {uri: files.uri, type: files.type, name: files.fileName});
+                console.log("0123456",bodyFormData);
+                const userDetail = await AsyncStorage.getItem("detail");
+                let userData = JSON.parse(userDetail);
+                debugger
+                // axios({
+                //     method: 'post',
+                //     url: ApiConstant.baseUrl + ApiConstant.studyMaterial,
+                //     data: bodyFormData,
+                //     headers: { 'Accept': 'application/json',
+                //         'Content-Type': 'multipart/form-data',"Authorization": userData.token }
+                // })
+                //     .then(function (response) {
+                //         //handle success
+                //         console.log(response);
+                //     })
+                //     .catch(function (response) {
+                //         //handle error
+                //         console.log(response);
+                //     });
+
+                callApi(ApiConstant.baseUrl + ApiConstant.studyMaterial ,'post',bodyFormData,
+                    {'Accept': 'application/json',
+                    "content-type":'multipart/form-data',"Authorization":userData.token}).then( async (res)=> {
+                    console.log("0123",res);
+                    if(res.success === 1){
+                        console.log("done");
+                    }else {
+                        console.log("not done");
+                    }
+                }).catch((err)=>{
+                    console.log(err);
+                    //Alert.alert(err.data.error);
+                });
             }
         });
 
@@ -81,7 +123,13 @@ export default class File extends Component{
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
         const userDetail = await AsyncStorage.getItem("detail");
         let userData = JSON.parse(userDetail);
-        callApi(ApiConstant.baseUrl+ApiConstant.studyMaterialSubject + `${s_id}` + `/${d_id}`,'get',{},
+        console.log("---",userData);
+        if(userData.response.role === 'Teacher'){
+            this.setState({url:ApiConstant.baseUrl+ApiConstant.studyMaterialSubject + `${s_id}` + `/${d_id}`});
+        } else {
+            this.setState({url:ApiConstant.baseUrl+ApiConstant.studyMaterialStudentSubject + `${s_id}`});
+        }
+        callApi(this.state.url,'get',{},
             {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
                 console.log(res);
             if(res.success === 1){

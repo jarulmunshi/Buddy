@@ -25,12 +25,19 @@ export default class StudyMaterial extends Component{
         classList: [],
         iName:"bars",
         isBack:true,
-        dataList: []
+        dataList: [],
+        url: ""
     };
     displayClasslist = async () =>{
         const userDetail = await AsyncStorage.getItem("detail");
         let userData = JSON.parse(userDetail);
-        callApi(ApiConstant.baseUrl+ApiConstant.studyMaterial,'get',{},
+        // console.log("0000",userData.response.role);
+        if(userData.response.role === 'Teacher'){
+            this.setState({url:ApiConstant.baseUrl+ApiConstant.studyMaterial});
+        }else {
+            this.setState({url:ApiConstant.baseUrl+ApiConstant.studyMaterialStudent});
+        }
+        callApi(this.state.url,'get',{},
             {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
             console.log(res);
             if(res.success === 1){
@@ -38,7 +45,6 @@ export default class StudyMaterial extends Component{
             }else{
 
             }
-
         }).catch((err)=>{
             Alert.alert(err.data.error);
         })
@@ -61,28 +67,13 @@ export default class StudyMaterial extends Component{
 
     goNext=async (sid,did)=>{
         this.props.navigation.navigate('File',{s_id:sid,d_id:did});
-        // const userDetail = await AsyncStorage.getItem("detail");
-        // let userData = JSON.parse(userDetail);
-        // callApi(ApiConstant.baseUrl+ApiConstant.studyMaterialSubject + `${sid}` + `/${did}`,'get',{},
-        //     {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
-        //         console.log(res);
-        //     if(res.success === 1){
-        //         await AsyncStorage.setItem("files",JSON.stringify(res.response));
-        //         this.props.navigation.navigate('File',{s_id:sid,d_id:did});
-        //     }else {
-        //         await AsyncStorage.removeItem("files");
-        //         this.props.navigation.navigate('File');
-        //     }
-        // }).catch((err)=>{
-        //     console.log(err);
-        //     //Alert.alert(err.data.error);
-        // });
     };
 
     renderClassInfo(){
         return this.state.classList.map(classInfo =>
             <StudyMaterialInfo key={classInfo.standard} classInfo={classInfo}
-                               onBackButtonPress={(sid, did) => this.goNext(sid, did)}/>
+                               onBackButtonPress={(sid, did) =>{ console.log(sid + " " +did);
+                               this.goNext(sid, did)}}/>
         )
     };
 

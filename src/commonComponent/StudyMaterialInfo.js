@@ -10,11 +10,11 @@ import {Card, CardSection} from './Common'
 import {WindowsWidth,MyriadFont} from './global'
 
 const StudyMaterialInfo = (props) => {
-    const {standard, subject, subject_id , division_id , division} =props.classInfo;
+    const {standard, subject, subject_id , division_id , division,id} =props.classInfo;
     const color = 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
     return(
         <Card>
-            <TouchableOpacity onPress={()=> props.onBackButtonPress(subject_id,division_id)}>
+            <TouchableOpacity onPress={()=> props.onBackButtonPress(subject_id || id ,division_id || null)}>
                 <CardSection>
                     <View style={[styles.colorView, {backgroundColor: color}]}></View>
 
@@ -27,7 +27,8 @@ const StudyMaterialInfo = (props) => {
                             <View style={{alignItems:'flex-end', marginRight: 10}}>
                                 <View style={{flexDirection: 'row'}}>
                                     <Text style={styles.classContainer}>{standard}</Text>
-                                    {standard > 2 &&<Text>th</Text>||<Text>rd</Text>}
+                                    {standard > 3 &&<Text>th</Text>||standard === 3 &&<Text>rd</Text>
+                                    ||standard === 2 &&<Text>nd</Text>||standard === 1 &&<Text>st</Text>}
                                     {division ==='A' &&
                                     <Text style={[styles.divisonContainer,{color:'rgb(229,115,23)'}]}> {division}</Text> ||
                                     division === 'B' &&<Text style={[styles.divisonContainer,{color:'rgb(128,192,105)'}]}> {division}</Text> ||
