@@ -35,10 +35,10 @@ export default class Message extends Component{
     }
 
     getComplain = async ()=>{
-        const val = await AsyncStorage.getItem("detail");
-        let ans = JSON.parse(val);
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
         callApi(ApiConstant.baseUrl+ApiConstant.complainParent,'get',{},
-            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+            {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
             console.log(res);
             if(res.success === 1){
                 this.setState({messageList: res.response})
@@ -48,7 +48,7 @@ export default class Message extends Component{
             //console.log(err);
             Alert.alert(err.data.error);
         })
-    }
+    };
 
     getRole = async () => {
         // const userRole = await AsyncStorage.getItem("role")
@@ -59,7 +59,7 @@ export default class Message extends Component{
                 showFab: true
             })
         }
-    }
+    };
 
     hideAddMessage(){
         this.setState({
@@ -71,27 +71,24 @@ export default class Message extends Component{
     }
 
     addMessage=async (title, description)=>{
-        const val = await AsyncStorage.getItem("detail");
-        let ans = JSON.parse(val);
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
         const data={
             title:title,
             description:description
         };
         debugger;
         callApi(ApiConstant.baseUrl+ApiConstant.complain,'post',data,
-            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
-            console.log('=====',res.data);
+            {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
             if(res.data.success === 1)
             {
                 this.setState({messageList: [res.data.response,...this.state.messageList]})
             }
-            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
         }).catch((err)=>{
-            //console.log(err);
             Alert.alert(err.data.error);
         });
         this.setState({showAddMessage: false, showFab: true, title: '', description: ''})
-    }
+    };
 
     changeTitle(value){
         this.setState({
@@ -160,4 +157,4 @@ const styles = {
     parentContainer: {
         flex: 1,
     },
-}
+};

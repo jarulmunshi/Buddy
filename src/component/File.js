@@ -11,7 +11,8 @@ import {
     BackHandler
 } from 'react-native'
 import Color from '../helper/theme/Color'
-import {DisplayAreaView} from '../commonComponent/global';
+import {Card,CardSection} from "../commonComponent/Common";
+import {DisplayAreaView, MyriadFont, WindowsWidth} from '../commonComponent/global';
 import {
     FileInfo,
     Footer,
@@ -20,12 +21,16 @@ import {
 import StudyMaterial from "./StudyMaterial";
 import RNFetchBlob from 'react-native-fetch-blob'
 import {DocumentPicker,DocumentPickerUtil} from 'react-native-document-picker';
+import {callApi} from "../services/ApiCall";
+import ApiConstant from "../services/ApiConstant";
 var data=[];
+let s_id,d_id;
 export default class File extends Component{
-
     constructor(props){
         super(props);
-        //data = props.navigation.state.params.data;
+        data = props.navigation.state.params;
+        s_id = data.s_id;
+        d_id = data.d_id;
         this.state = {
             active: 'Class',
             materialList: [],
@@ -33,61 +38,62 @@ export default class File extends Component{
             isBack:true,
             isIcon:true,
             uploadFile: false,
-            deleteShow: false
+            deleteShow: false,
+            flag:1
         };
 
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
         this.getRole()
     }
 
-    componentDidMount=async ()=>{
-        debugger
-        const val = await AsyncStorage.getItem("files");
-        let ans = JSON.parse(val);
-        if (ans) {
-            console.log("ans----",ans);
-            this.setState({materialList: ans});
-        }
-        else {
-            debugger;
-            //await AsyncStorage.removeItem("files");
-            //this.setState({materialList: []});
-        }
-
-    };
-
     showPicker = () => {
-        console.log("Document Picker");
         DocumentPicker.show({
             filetype: [DocumentPickerUtil.pdf()],
         },(error,res) => {
-            // Android
-            console.log(
-                res.uri,
-                res.type, // mime type
-                res.fileName,
-                res.fileSize
-            );
+            if(error){
+                Alert.alert(error)
+            }else {
+                // Android
+                console.log(
+                    res.uri,
+                    res.type, // mime type
+                    res.fileName,
+                    res.fileSize
+                );
+            }
         });
 
     };
+
     getRole = async () => {
         //const userRole = AsyncStorage.getItem("role")
-        const val = await AsyncStorage.getItem("detail");
-        let ans = JSON.parse(val);
-        //const userRole = AsyncStorage.getItem("detail")
-        //console.log("----",ans.response.role);
-        debugger
-        if(ans.response.role === 'Teacher'){
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
+        if(userData.response.role === 'Teacher'){
             this.setState({
                 uploadFile: true,
                 deleteShow: true
             })
         }
-    }
+    };
 
-    componentWillMount() {
+    componentWillMount=async () =>{
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
+        callApi(ApiConstant.baseUrl+ApiConstant.studyMaterialSubject + `${s_id}` + `/${d_id}`,'get',{},
+            {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
+                console.log(res);
+            if(res.success === 1){
+                this.setState({materialList: res.response});
+            }else {
+                this.setState({flag:0})
+            }
+        }).catch((err)=>{
+            console.log(err);
+            //Alert.alert(err.data.error);
+        });
+
     }
 
     componentWillUnmount() {
@@ -111,19 +117,15 @@ export default class File extends Component{
                         <View style={[styles.colorView, {backgroundColor: 'red'}]}/>
 
                         <View style={styles.infoContainer}>
-                            <Text style={styles.standardContainer}>No Note Available</Text>
+                            <Text style={styles.standardContainer}>No File Uploaded</Text>
                         </View>
                     </CardSection>
                 </Card>
             </View>
         )
-    }
+    };
 
     renderClassInfo(){
-        //const userRole = AsyncStorage.getItem("role")
-        console.log("dfhg",this.state.classList);
-        //console.log("dfhg",this.state.classList);
-        const userRole = AsyncStorage.getItem("detail");
         return this.state.materialList.map(classInfo =>
             <FileInfo key={classInfo.id} classInfo={classInfo} deleteshow={this.state.deleteShow} delete={(id) => this.deleteFile(id)}
                       downloadFile={(id) => this.downloadFile(id)}/>
@@ -138,6 +140,7 @@ export default class File extends Component{
 
         this.setState({classList:filteredItems })
     }
+
     downloadFile(id){
         RNFetchBlob
             .config({
@@ -172,7 +175,7 @@ export default class File extends Component{
 
                 <View style={{marginTop: 10, height: DisplayAreaView}}>
                     <ScrollView>
-                        {this.renderClassInfo()}
+                        {this.state.flag ? this.renderClassInfo() : this.renderEmptySection()}
                     </ScrollView>
                 </View>
 
@@ -187,4 +190,18 @@ const styles ={
         flex: 1,
         backgroundColor:'white'
     },
+    colorView: {
+        width: 2,
+    },
+    infoContainer: {
+        padding: 10,
+        width: WindowsWidth
+    },
+    standadContainer: {
+        color: 'rgb(7, 7, 7)',
+        fontSize: 50,
+        width: WindowsWidth ,
+        fontFamily: MyriadFont,
+        fontWeight: 600
+    }
 };

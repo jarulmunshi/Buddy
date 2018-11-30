@@ -27,15 +27,13 @@ export default class ManageClass extends Component{
     }
 
     getData = async () =>{
-        const val = await AsyncStorage.getItem("detail");
-        let ans = JSON.parse(val);
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
         callApi(ApiConstant.baseUrl+ApiConstant.classNotes,'get',{},
-            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
-            console.log(res);
+            {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
             if(res.success === 1){
                 this.setState({notesList: res.response})
             }
-            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
         }).catch((err)=>{
             Alert.alert(err.data.error);
         })
@@ -54,31 +52,29 @@ export default class ManageClass extends Component{
         todayDate: date.getDate()+" "+monthShortName[date.getMonth()]+" "+date.getFullYear(),
         present: 0,
         absent: 0,
-    }
+    };
 
     componentWillMount = async () =>{
-        const val = await AsyncStorage.getItem("detail");
-        let ans = JSON.parse(val);
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
         callApi(ApiConstant.baseUrl+ApiConstant.todayAttendance,'get',{},
-            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+            {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
                 console.log(res);
             if(res.success === 1){
                 this.setState({attendanceList: res.response})
             }
-            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
         }).catch((err)=>{
-            //console.log(err);
             Alert.alert(err.data.error);
         })
 
-    }
+    };
 
     componentDidMount(){
         this.setState({
             present: this.state.attendanceList.filter((obj) => obj.present === true).length,
             absent: this.state.attendanceList.filter((obj) => obj.present === false).length,
         })
-    }
+    };
 
     changeActiveState(value){
         this.setState({
@@ -127,28 +123,25 @@ export default class ManageClass extends Component{
     }
 
     addNote = async (title, description)=>{
-        const val = await AsyncStorage.getItem("detail");
-        let ans = JSON.parse(val);
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
         const data={
             title:title,
             description:description
         };
         debugger;
         callApi(ApiConstant.baseUrl+ApiConstant.classNotes,'post',data,
-            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
-                debugger
-            console.log('=====',res.data);
+            {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
             if(res.data.success === 1)
             {
                 this.setState({notesList: [ ...this.state.notesList,res.data.response]})
             }
-            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
         }).catch((err)=>{
             //console.log(err);
             Alert.alert(err.data.error);
         });
         this.setState({showAddNote: false, title: '', description: ''})
-    }
+    };
 
     changeTitle(value){
         this.setState({
@@ -172,17 +165,15 @@ export default class ManageClass extends Component{
             dateToday: year+"-"+month+"-"+day,
             showCalendar: false,
         });
-        const val = await AsyncStorage.getItem("detail");
-        let ans = JSON.parse(val);
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
         callApi(ApiConstant.baseUrl+ApiConstant.dateWiseAttendance + `${this.state.dateToday}`,'get',{},
-            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+            {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
             console.log(res);
              if(res.success === 1){
                  this.setState({attendanceList: res.response})
              }
-            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
         }).catch((err)=>{
-            //console.log(err);
             Alert.alert(err.data.error);
         })
 

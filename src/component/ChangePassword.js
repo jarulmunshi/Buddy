@@ -64,13 +64,11 @@ class ChangePassword extends Component{
                     oldPassword:this.state.opass,
                     password:this.state.npass
                 };
-                const val = await AsyncStorage.getItem("detail");
-                let ans = JSON.parse(val);
-                console.log(ans.token);
+                const userDetail = await AsyncStorage.getItem("detail");
+                let userData = JSON.parse(userDetail);
                 callApi(ApiConstant.baseUrl+ApiConstant.changePassword,'put',data,
-                    {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+                    {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
                     console.log(res);
-                    //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
                     this.setState({opass:'',npass:'',cpass:''});
                     Alert.alert("Password Updated Successfully");
                 }).catch((err)=>{

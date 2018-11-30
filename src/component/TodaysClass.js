@@ -8,9 +8,9 @@ import {
     SafeAreaView, StatusBar, AsyncStorage
 } from 'react-native';
 import FAB from 'react-native-fab'
-
+import {Card,CardSection} from "../commonComponent/Common";
 import Color from '../helper/theme/Color'
-import {DisplayAreaView} from '../commonComponent/global';
+import {DisplayAreaView, MyriadFont, WindowsWidth} from '../commonComponent/global';
 import {
     CustomMenu,
     TodaysClassInfo,
@@ -29,31 +29,47 @@ export default class TodaysClass extends Component{
         active: 'Class',
         classList: [],
         iName:"bars",
-        isBack:true
+        isBack:true,
+        flag:1
     };
 
     componentWillMount = async () =>{
-        const val = await AsyncStorage.getItem("detail");
-        let ans = JSON.parse(val);
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
         callApi(ApiConstant.baseUrl+ApiConstant.timeTable,'get',{},
-            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+            {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
             if(res.success === 1){
                 this.setState({classList: res.response})
+            }else {
+                this.setState({flag:0});
             }
-            // console.log("---********----");
-            // console.log(this.state.classList);
-            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
+
         }).catch((err)=>{
-            //console.log(err);
             Alert.alert(err.data.error);
         })
-    }
+    };
 
     changeActiveState(value){
         this.setState({
             active: value
         })
     }
+
+    renderEmptySection = () =>{
+        return(
+            <View style={{marginTop: 20}}>
+                <Card>
+                    <CardSection>
+                        <View style={[styles.colorView, {backgroundColor: 'red'}]}/>
+
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.standardContainer}>No Schedule Available Yet </Text>
+                        </View>
+                    </CardSection>
+                </Card>
+            </View>
+        )
+    };
 
     renderClassInfo(){
         return this.state.classList.map(classInfo =>
@@ -79,7 +95,7 @@ export default class TodaysClass extends Component{
 
                 <View style={{marginTop: 10, height: DisplayAreaView}}>
                         <ScrollView>
-                            {this.renderClassInfo()}
+                            {this.state.flag ? this.renderClassInfo() : this.renderEmptySection()}
                         </ScrollView>
                 </View>
 
@@ -93,5 +109,19 @@ const styles ={
     parentContainer: {
         flex: 1,
         backgroundColor:'white'
+    },
+    colorView: {
+        width: 2,
+    },
+    infoContainer: {
+        padding: 15,
+        width: WindowsWidth
+    },
+    standadContainer: {
+        color: 'rgb(7, 7, 7)',
+        fontSize: 50,
+        width: WindowsWidth ,
+        fontFamily: MyriadFont,
+        fontWeight: 600
     },
 };

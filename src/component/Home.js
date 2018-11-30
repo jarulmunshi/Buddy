@@ -8,6 +8,7 @@ class Home extends Component{
     static navigationOptions = {
         drawerLabel: `Today's Class`
     };
+
     constructor(props){
         super(props);
         this.state={
@@ -16,9 +17,11 @@ class Home extends Component{
             isBack:true
         };
     }
+
     goBack=()=>{
         this.props.navigation.openDrawer();
-    }
+    };
+
     render(){
         return(
             <SafeAreaView style={{backgroundColor:'white',flex:1}}>

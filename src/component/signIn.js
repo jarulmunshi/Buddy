@@ -49,10 +49,11 @@ class SignIn extends Component{
 
     navigateScreen(key){
         let route = '';
-        if(key === 'Admin')
-        {
-            route = "Admin"
-        }else if(key === 'Parent' || key === 'Student'){
+        // if(key === 'Admin')
+        // {
+        //     route = "Admin"
+        // }else
+        if(key === 'Parent' || key === 'Student'){
             route = "Parent"
         }else if(key === 'Teacher'){
             route = "Home"
@@ -91,7 +92,6 @@ class SignIn extends Component{
                 await AsyncStorage.setItem("detail",JSON.stringify(res.data));
                 this.navigateScreen(res.data.response.role)
             }).catch((err)=>{
-                //console.log(err);
                 Alert.alert(err.data.error);
             })
         }

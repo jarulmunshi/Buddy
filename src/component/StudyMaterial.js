@@ -28,28 +28,27 @@ export default class StudyMaterial extends Component{
         dataList: []
     };
     displayClasslist = async () =>{
-        const val = await AsyncStorage.getItem("detail");
-        let ans = JSON.parse(val);
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
         callApi(ApiConstant.baseUrl+ApiConstant.studyMaterial,'get',{},
-            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
+            {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
             console.log(res);
             if(res.success === 1){
                 this.setState({classList: res.response});
-                await AsyncStorage.setItem("data",JSON.stringify(res.response));
             }else{
-                // Alert.alert(res.error);
-                // await AsyncStorage.setItem("data",JSON.stringify(res.error));
+
             }
 
         }).catch((err)=>{
-            //console.log(err);
             Alert.alert(err.data.error);
         })
 
     };
+
     componentWillMount(){
         this.displayClasslist();
     }
+
     changeActiveState(value){
         this.setState({
             active: value
@@ -61,28 +60,26 @@ export default class StudyMaterial extends Component{
     };
 
     goNext=async (sid,did)=>{
-        debugger
-        const val = await AsyncStorage.getItem("detail");
-        let ans = JSON.parse(val);
-        callApi(ApiConstant.baseUrl+ApiConstant.studyMaterialSubject + `${sid}` + `/${did}`,'get',{},
-            {"Content-Type":"application/json","Authorization":ans.token}).then( async (res)=> {
-                console.log(res);
-            if(res.success === 1){
-                debugger
-                await AsyncStorage.setItem("files",JSON.stringify(res.response));
-                this.props.navigation.navigate('File');
-            }else {
-                debugger
-                await AsyncStorage.removeItem("files");
-                this.props.navigation.navigate('File');
-            }
-        }).catch((err)=>{
-            console.log(err);
-            //Alert.alert(err.data.error);
-        });
+        this.props.navigation.navigate('File',{s_id:sid,d_id:did});
+        // const userDetail = await AsyncStorage.getItem("detail");
+        // let userData = JSON.parse(userDetail);
+        // callApi(ApiConstant.baseUrl+ApiConstant.studyMaterialSubject + `${sid}` + `/${did}`,'get',{},
+        //     {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
+        //         console.log(res);
+        //     if(res.success === 1){
+        //         await AsyncStorage.setItem("files",JSON.stringify(res.response));
+        //         this.props.navigation.navigate('File',{s_id:sid,d_id:did});
+        //     }else {
+        //         await AsyncStorage.removeItem("files");
+        //         this.props.navigation.navigate('File');
+        //     }
+        // }).catch((err)=>{
+        //     console.log(err);
+        //     //Alert.alert(err.data.error);
+        // });
     };
+
     renderClassInfo(){
-        debugger
         return this.state.classList.map(classInfo =>
             <StudyMaterialInfo key={classInfo.standard} classInfo={classInfo}
                                onBackButtonPress={(sid, did) => this.goNext(sid, did)}/>
