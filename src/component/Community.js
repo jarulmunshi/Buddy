@@ -2,39 +2,35 @@ import React, {Component} from 'react'
 import {
     View,
     SafeAreaView,
-    ScrollView
+    ScrollView, AsyncStorage, Alert
 } from 'react-native'
 
 import {DisplayAreaView} from '../commonComponent/global';
 import {Header, Footer, CommunityInfo} from '../commonComponent/Common'
+import {callApi} from "../services/ApiCall";
+import ApiConstant from "../services/ApiConstant";
 
 export default class Community extends Component{
 
     state = {
         iName:"bars",
-        communityData: [
-            {
-                "title":"NEWS",
-                "description": "LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING AND TESTING INDUSTRY. LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING AND TESTING INDUSTRY. LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING AND TESTING INDUSTRY."
-            },
-            {
-                "title":"SPORTS FESTIVAL",
-                "images": [
-                    "https://akm-img-a-in.tosshub.com/indiatoday/images/story/201601/india-rio2-1_647_011316083442_0.jpg",
-                    "https://akm-img-a-in.tosshub.com/indiatoday/images/story/201601/india-rio2-1_647_011316083442_0.jpg",
-                    "https://akm-img-a-in.tosshub.com/indiatoday/images/story/201601/india-rio2-1_647_011316083442_0.jpg"
-                ]
-            },
-            {
-                "title":"SPORTS FESTIVAL",
-                "description": "LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING AND TESTING INDUSTRY. LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING AND TESTING INDUSTRY. LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING AND TESTING INDUSTRY.",
-                "images": [
-                    "https://akm-img-a-in.tosshub.com/indiatoday/images/story/201601/india-rio2-1_647_011316083442_0.jpg",
-                ]
-            }
-        ],
+        communityData: [],
         isBack:true,
     }
+
+    componentWillMount = async () =>{
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
+        callApi(ApiConstant.baseUrl+ApiConstant.community,'get',{},
+            {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
+            console.log(res);
+            if(res.success === 1){
+                this.setState({communityData: res.response})
+            }
+        }).catch((err)=>{
+            Alert.alert(err.data.error);
+        })
+    };
 
     renderCommunityInfo(){
         return this.state.communityData.map(communityData =>

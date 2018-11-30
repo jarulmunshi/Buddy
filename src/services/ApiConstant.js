@@ -15,6 +15,9 @@ module.exports={
     complainParent:'/complain/parent',
     studyMaterial:'/studyMaterial',
     studyMaterialSubject:'/studyMaterial/teacher/materials/',
+    parentStudentAttendanceNotes: '/notes/student/',
+    community: '/community/',
+    studentTimeTable: '/timeTable/student/timeTable/schedule',
     studyMaterialStudent:'/studyMaterial/student/lectures',
     studyMaterialStudentSubject:'/studyMaterial/student/materials/',
     studyMaterialRemove:'/studyMaterial/Media/'

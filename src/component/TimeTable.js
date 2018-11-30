@@ -6,13 +6,15 @@ import {
     ScrollView,
     Image, Platform,
     FlatList,
-    TouchableOpacity
+    TouchableOpacity, AsyncStorage, Alert
 } from 'react-native'
 import Accordion from 'react-native-collapsible/Accordion';
 
 import Color from '../helper/theme/Color'
 import {WindowsHeight, WindowsWidth, DisplayAreaView} from '../commonComponent/global';
 import {Header, Footer, TimeTableList, Card, CardSection} from '../commonComponent/Common';
+import {callApi} from "../services/ApiCall";
+import ApiConstant from "../services/ApiConstant";
 
 export default class TimeTable extends Component {
     state = {
@@ -401,8 +403,24 @@ export default class TimeTable extends Component {
                 "color": 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
             }
         ],
+        timeTableData: [],
         isExpanded: null
     }
+
+    componentDidMount = async () =>{
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
+        callApi(ApiConstant.baseUrl+ApiConstant.studentTimeTable,'get',{},
+            {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
+            if(res.success === 1){
+                this.setState({timeTableData: res.response})
+            }else {
+                console.log("dgdggruhirug igriureg")
+            }
+        }).catch((err)=>{
+            Alert.alert(err.data.error);
+        })
+    };
 
     goBack = () => {
         this.props.navigation.openDrawer();

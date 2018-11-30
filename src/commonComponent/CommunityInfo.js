@@ -12,7 +12,19 @@ import Color from "../helper/theme/Color";
 import {MyriadFont} from './global'
 
 const CommunityInfo = (props) => {
-    const {title, description, images} = props.communityInfo
+    const {title, description, Media} = props.communityInfo
+
+    var slider = []
+    for (let i = 0; i < Media.length; i++) {
+        debugger
+        slider.push(
+            <View key={i}>
+                <Image key={`images${i}`}
+                       source={{uri:`http://192.168.200.34:3000/${Media[i].image_url}`}}
+                       style={[styles.dataContainer, {resizeMode: 'contain'}]}/>
+            </View>
+        )
+    }
 
     return(
         <Card>
@@ -20,11 +32,11 @@ const CommunityInfo = (props) => {
                 <View style={{flex:1}}>
                     <Text style={styles.headingStyle}>{title}</Text>
                     {
-                        (images) &&
-                            <View style={styles.dataContainer}>
+                        (Media.length > 0) &&
+                            <View style={{height: 200}}>
                                 <Swiper style={styles.wrapper}
                                         dot={<View style={{
-                                            backgroundColor: '#FFF',
+                                            backgroundColor: Color.lightColor,
                                             width: 8,
                                             height: 8,
                                             borderRadius: 4,
@@ -44,15 +56,7 @@ const CommunityInfo = (props) => {
                                             marginBottom: 3
                                         }}/>}
                                 >
-                                    <View>
-                                        <Image style={styles.dataContainer} source={{uri: "https://akm-img-a-in.tosshub.com/indiatoday/images/story/201601/india-rio2-1_647_011316083442_0.jpg"}}/>
-                                    </View>
-                                    <View>
-                                        <Image style={styles.dataContainer} source={{uri: "https://akm-img-a-in.tosshub.com/indiatoday/images/story/201601/india-rio2-1_647_011316083442_0.jpg"}}/>
-                                    </View>
-                                    <View>
-                                        <Image style={styles.dataContainer} source={{uri: "https://akm-img-a-in.tosshub.com/indiatoday/images/story/201601/india-rio2-1_647_011316083442_0.jpg"}}/>
-                                    </View>
+                                    {slider}
                                 </Swiper>
                             </View>
                     }
@@ -83,7 +87,6 @@ const styles = {
         color: '#000'
     },
     newsContainer: {
-        height: 200,
         backgroundColor: 'rgb(229,232,232)',
         justifyContent: 'center',
         margin: 5,
