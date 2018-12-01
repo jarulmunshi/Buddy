@@ -129,7 +129,6 @@ export default class ManageClass extends Component{
             title:title,
             description:description
         };
-        debugger;
         callApi(ApiConstant.baseUrl+ApiConstant.classNotes,'post',data,
             {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
             if(res.data.success === 1)

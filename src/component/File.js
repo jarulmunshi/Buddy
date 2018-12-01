@@ -196,6 +196,7 @@ export default class File extends Component{
             })
     }
 
+
     render(){
         return(
             <SafeAreaView style={styles.parentContainer}>

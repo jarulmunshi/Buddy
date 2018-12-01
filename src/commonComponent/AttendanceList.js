@@ -12,7 +12,6 @@ import {MyriadFont,WindowsWidth} from './global'
 const AttendanceList = (props) => {
     const {id, Student_id, name, present} =props.notesInfo;
     const color = 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')';
-    debugger
     return(
         <Card>
             <CardSection>

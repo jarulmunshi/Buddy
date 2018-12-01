@@ -15,7 +15,6 @@ import {NavigationActions, StackActions} from "react-navigation";
 const FileInfo = (props) => {
     const {image_url, createdAt,id} = props.classInfo;
     const color = 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
-    debugger
     return(
         <Card>
                 <CardSection>

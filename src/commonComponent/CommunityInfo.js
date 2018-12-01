@@ -16,7 +16,6 @@ const CommunityInfo = (props) => {
 
     var slider = []
     for (let i = 0; i < Media.length; i++) {
-        debugger
         slider.push(
             <View key={i}>
                 <Image key={`images${i}`}

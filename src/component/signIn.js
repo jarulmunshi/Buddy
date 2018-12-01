@@ -82,7 +82,6 @@ class SignIn extends Component{
             this.setState({iconError:'exclamation-circle',emailError:'Invalid'});
         }
         else {
-            debugger;
             const data={
                 email:this.state.email,
                 password:this.state.password

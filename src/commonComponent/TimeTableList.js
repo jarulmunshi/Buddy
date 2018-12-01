@@ -10,14 +10,15 @@ import {Card, CardSection} from './Common'
 import {MyriadFont, WindowsWidth} from './global'
 
 const TimeTableList = (props) => {
-    const {startTime, endTime, subject, teacherName, color} =props.timeTable
-
+    const {start_time, end_time, subject, name} =props.timeTable;
+    const color='rgba(' + Math.round(Math.random() * 255) + ','
+        + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)';
     return(
-        <View style={styles.listContainer}>
+         <View style={styles.listContainer}>
             <View style={[styles.containerStyle, {backgroundColor: color}]}>
-                <Text style={styles.titleText}>{startTime} To {endTime}</Text>
+                <Text style={styles.titleText}>{start_time} To {end_time}</Text>
                 <Text style={styles.titleText}>{subject}</Text>
-                <Text style={styles.titleText}>{teacherName}</Text>
+                <Text style={styles.titleText}>{name}</Text>
             </View>
         </View>
     )

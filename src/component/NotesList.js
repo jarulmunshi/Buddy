@@ -34,7 +34,6 @@ export default class NotesList extends Component {
     };
 
     componentDidMount = async () => {
-        debugger
         const userDetail = await AsyncStorage.getItem("detail");
         let userData = JSON.parse(userDetail);
 
@@ -42,7 +41,6 @@ export default class NotesList extends Component {
             {"Content-Type":"application/json","Authorization":userData.token}).then( (res)=> {
             console.log(res);
             if(res.success === 1){
-                debugger
                 const temp23= res.respones.map((item)=>{
                     item.createdAt = moment(item.createdAt).format('YYYY-MM-DD')
                     return item;
@@ -76,12 +74,10 @@ export default class NotesList extends Component {
             Alert.alert(err.data.error);
         })
 
-        debugger
     }
 
     renderItem = (item) => {
         const {title, description, createdAt} =item;
-        debugger
         return(
             <Card>
                 <CardSection>
@@ -100,7 +96,6 @@ export default class NotesList extends Component {
     }
 
     dateByData(date) {
-        debugger
         if (this.state.allData.some((d) => d.title.toString() === date.toString())) {
             let dateObj = {};
             if (date in this.state.markDates) {
@@ -120,7 +115,6 @@ export default class NotesList extends Component {
             })
             this.setState({dataList: mtemp, date: moment(date).format('YYYY-MM-DD'), markDates: dateObj})
         }else{
-            debugger
             let dateObj = {};
             const data = _.groupBy(this.state.notesList, 'createdAt');
             const dates = Object.keys(data);

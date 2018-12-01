@@ -15,6 +15,9 @@ import {WindowsHeight, WindowsWidth, DisplayAreaView} from '../commonComponent/g
 import {Header, Footer, TimeTableList, Card, CardSection} from '../commonComponent/Common';
 import {callApi} from "../services/ApiCall";
 import ApiConstant from "../services/ApiConstant";
+import _ from 'lodash';
+import moment from "moment";
+
 
 export default class TimeTable extends Component {
     state = {
@@ -22,398 +25,75 @@ export default class TimeTable extends Component {
         isBack: true,
         active: [],
         collapsed: false,
-        timeTable: [
-            {
-                "id": 1,
-                "day": "MONDAY",
-                "schedule": [
-                    {
-                        "startTime": "10:00",
-                        "endTime": "10:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "10:30",
-                        "endTime": "11:00",
-                        "subject": "SCIENCE",
-                        "teacherName": "ABC",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "11:00",
-                        "endTime": "11:30",
-                        "subject": "ENGLISH",
-                        "teacherName": "DEF",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "11:30",
-                        "endTime": "12:00",
-                        "subject": "COMPUTER",
-                        "teacherName": "GHI",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "12:00",
-                        "endTime": "12:30",
-                        "subject": "PT",
-                        "teacherName": "GHI",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "12:30",
-                        "endTime": "01:00",
-                        "subject": "PHYSICS",
-                        "teacherName": "JKL",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "01:00",
-                        "endTime": "01:30",
-                        "subject": "HINDI",
-                        "teacherName": "MNO",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "01:30",
-                        "endTime": "02:00",
-                        "subject": "SS",
-                        "teacherName": "PQR",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                ],
-                "color": 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
-            },
-            {
-                "id": 2,
-                "day": "TUESDAY",
-                "schedule": [
-                    {
-                        "startTime": "10:00",
-                        "endTime": "10:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "10:30",
-                        "endTime": "11:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "11:00",
-                        "endTime": "11:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "11:30",
-                        "endTime": "12:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "12:00",
-                        "endTime": "12:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "12:30",
-                        "endTime": "01:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "01:00",
-                        "endTime": "01:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "01:30",
-                        "endTime": "02:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                ],
-                "color": 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
-            },
-            {
-                "id": 3,
-                "day": "WEDNESDAY",
-                "schedule": [
-                    {
-                        "startTime": "10:00",
-                        "endTime": "10:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "10:30",
-                        "endTime": "11:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "11:00",
-                        "endTime": "11:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "11:30",
-                        "endTime": "12:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "12:00",
-                        "endTime": "12:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "12:30",
-                        "endTime": "01:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "01:00",
-                        "endTime": "01:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "01:30",
-                        "endTime": "02:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                ],
-                "color": 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
-            },
-            {
-                "id": 4,
-                "day": "THURSDAY",
-                "schedule": [
-                    {
-                        "startTime": "10:00",
-                        "endTime": "10:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "10:30",
-                        "endTime": "11:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "11:00",
-                        "endTime": "11:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "11:30",
-                        "endTime": "12:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "12:00",
-                        "endTime": "12:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "12:30",
-                        "endTime": "01:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "01:00",
-                        "endTime": "01:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "01:30",
-                        "endTime": "02:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                ],
-                "color": 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
-            },
-            {
-                "id": 5,
-                "day": "FRIDAY",
-                "schedule": [
-                    {
-                        "startTime": "10:00",
-                        "endTime": "10:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "10:30",
-                        "endTime": "11:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "11:00",
-                        "endTime": "11:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "11:30",
-                        "endTime": "12:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "12:00",
-                        "endTime": "12:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "12:30",
-                        "endTime": "01:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "01:00",
-                        "endTime": "01:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "01:30",
-                        "endTime": "02:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                ],
-                "color": 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
-            },
-            {
-                "id": 6,
-                "day": "SATURDAY",
-                "schedule": [
-                    {
-                        "startTime": "10:00",
-                        "endTime": "10:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "10:30",
-                        "endTime": "11:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-
-                    },
-                    {
-                        "startTime": "11:00",
-                        "endTime": "11:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "11:30",
-                        "endTime": "12:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "12:00",
-                        "endTime": "12:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "12:30",
-                        "endTime": "01:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "01:00",
-                        "endTime": "01:30",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                    {
-                        "startTime": "01:30",
-                        "endTime": "02:00",
-                        "subject": "MATHS",
-                        "teacherName": "AMW",
-                        "color": 'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)',
-                    },
-                ],
-                "color": 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
-            }
-        ],
-        timeTableData: [],
+        timeTable: [],
         isExpanded: null
-    }
+    };
 
-    componentDidMount = async () =>{
+    componentDidMount = async() =>{
         const userDetail = await AsyncStorage.getItem("detail");
         let userData = JSON.parse(userDetail);
         callApi(ApiConstant.baseUrl+ApiConstant.studentTimeTable,'get',{},
             {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
             if(res.success === 1){
-                this.setState({timeTableData: res.response})
+                const data=_.groupBy(res.response,'day');
+                const dayList = Object.entries(data);
+                let schedules=[];
+                const daysArray = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+                dayList.map((item,i) => {
+                        schedules.push({
+                            id:i+1,
+                            day:item[0],
+                            schedule:item[1]
+                        })
+                });
+                let temp=[];
+                daysArray.map((item,i)=>{
+                    if(!(schedules.some((d) => d.day.toString() === item.toString()))){
+                        temp.push({
+                            id:i+1,
+                            day:item,
+                            schedule:[]
+                        })
+                    } else{
+                        const o=_.find(schedules, function(o) { if(o.day.toString() === item.toString()){return o.id}; });
+                        debugger
+                        temp.push({
+                            id:i+1,
+                            day:item,
+                            schedule:schedules[o.id-1].schedule
+                        })
+                    }
+
+                })
+                debugger
+                // dayList.map((item,i) => {
+                //     schedules.push({
+                //         id:i+1,
+                //         day:item[0],
+                //         schedule:item[1]
+                //     })
+                // });
+
+                // let timeTableData=[];
+                // _.forEach(schedules,(item,i)=>{
+                //     if(_.includes(schedules,daysArray)){
+                //         timeTableData.push({
+                //             id:i+1,
+                //             day:item[0],
+                //             schedule: item[1]
+                //         })
+                //     }else {
+                //         timeTableData.push({
+                //             id:i+1,
+                //             day:item[0],
+                //             schedule: null
+                //         })
+                //     }
+                // });
+                //console.log(timeTableData);
+                debugger;
+               this.setState({timeTable: temp});
+
             }else {
                 console.log("dgdggruhirug igriureg")
             }
@@ -467,16 +147,20 @@ export default class TimeTable extends Component {
     };
 
     onExapand =(schedule, index) => {
-        debugger
+        debugger;
         this.myFlatlist.scrollToOffset({viewPosition:0,y:0, animated: true})
        // this.myFlatlist.scrollToIndex({index:index,animated:true})
-        debugger
         return schedule.map(data =>
             <TimeTableList timeTable={data}/>
         )
     }
 
     _renderContent = timeTable => {
+        if(timeTable.schedule.length > 0){
+            console.log(timeTable.schedule.length);
+        }else {
+            console.log(timeTable.schedule.length);
+        }
         return timeTable.schedule.map(data =>
             <TimeTableList timeTable={data}/>
         )
@@ -487,7 +171,6 @@ export default class TimeTable extends Component {
     };
 
     render() {
-        debugger
         return (
             <SafeAreaView style={styles.parentContainer}>
                 <Header
