@@ -10,11 +10,11 @@
 		</data>
 		<key>Assets.car</key>
 		<data>
-		kTkGcOJrjTW/LG3+q4VCLgqBvcc=
+		X1mAWYCqANWgUtu327eshJjFCps=
 		</data>
 		<key>Base.lproj/LaunchScreen.nib</key>
 		<data>
-		v/PcaQuX+vFF4BENR0cFBavjhnM=
+		wloX7WnTqeAY4KDKHsNGzLsK8Ao=
 		</data>
 		<key>Entypo.ttf</key>
 		<data>
@@ -127,7 +127,7 @@
 		</data>
 		<key>PlugIns/SchoolBuddyTests.xctest.dSYM/Contents/Resources/DWARF/SchoolBuddyTests</key>
 		<data>
-		i/St6BbtZZnqKYCzwDj9+/KsBBA=
+		jeZh7jm3ZjCOY8i0lNqV99bCZgM=
 		</data>
 		<key>PlugIns/SchoolBuddyTests.xctest/Info.plist</key>
 		<data>
@@ -135,7 +135,7 @@
 		</data>
 		<key>PlugIns/SchoolBuddyTests.xctest/SchoolBuddyTests</key>
 		<data>
-		MYYy3mhPWdIQwvpE5+2MLg2yGU4=
+		WJ3ZG2HSWj826HKBYaVy9he3M1Q=
 		</data>
 		<key>PlugIns/SchoolBuddyTests.xctest/_CodeSignature/CodeResources</key>
 		<data>
@@ -167,22 +167,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			kTkGcOJrjTW/LG3+q4VCLgqBvcc=
+			X1mAWYCqANWgUtu327eshJjFCps=
 			</data>
 			<key>hash2</key>
 			<data>
-			badZ8f8jy8KDrrV0VJp3pJvcDx4NMTLEHIo4WDDkoE4=
+			bKfnPZw/UCKfZM7VXNVm+jiIk8B2eYPRNEkZHozpZV8=
 			</data>
 		</dict>
 		<key>Base.lproj/LaunchScreen.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			v/PcaQuX+vFF4BENR0cFBavjhnM=
+			wloX7WnTqeAY4KDKHsNGzLsK8Ao=
 			</data>
 			<key>hash2</key>
 			<data>
-			y36g/Z+hOrDmxkvvQVRT1WWGz3u2ZeE1+XPGBM+c5oo=
+			TAkNfv26xPvshP+gHjLJKUMWyyHPbTqHq1ZH3jNncMM=
 			</data>
 		</dict>
 		<key>Entypo.ttf</key>
@@ -455,11 +455,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			i/St6BbtZZnqKYCzwDj9+/KsBBA=
+			jeZh7jm3ZjCOY8i0lNqV99bCZgM=
 			</data>
 			<key>hash2</key>
 			<data>
-			VpLXiGwpH/UmpufVLb5PQ7Quj0ld0SecVXtWeidBB6w=
+			G7H7UiTz0O+ZSbXH6EMahQdGux6dEbT3qPuz+hlEkq8=
 			</data>
 		</dict>
 		<key>PlugIns/SchoolBuddyTests.xctest/Info.plist</key>
@@ -477,11 +477,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			MYYy3mhPWdIQwvpE5+2MLg2yGU4=
+			WJ3ZG2HSWj826HKBYaVy9he3M1Q=
 			</data>
 			<key>hash2</key>
 			<data>
-			+aIbLJxUk56FYe5D0ore3L+6fWbcvU9vGcdOoeEsEhw=
+			sM1m2NT3ZbLykcmqvDdgm9im6s4PadkYQtC4ySLIeWg=
 			</data>
 		</dict>
 		<key>PlugIns/SchoolBuddyTests.xctest/_CodeSignature/CodeResources</key>

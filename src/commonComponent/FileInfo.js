@@ -54,6 +54,7 @@ const FileInfo = (props) => {
                                     }
 
                                     <TouchableOpacity onPress={() =>{
+                                        debugger
                                         props.downloadFile(props.classInfo)
 
                                     }

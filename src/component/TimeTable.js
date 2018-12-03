@@ -16,8 +16,6 @@ import {Header, Footer, TimeTableList, Card, CardSection} from '../commonCompone
 import {callApi} from "../services/ApiCall";
 import ApiConstant from "../services/ApiConstant";
 import _ from 'lodash';
-import moment from "moment";
-
 
 export default class TimeTable extends Component {
     state = {
@@ -53,7 +51,8 @@ export default class TimeTable extends Component {
                         temp.push({
                             id:i+1,
                             day:item,
-                            schedule:[]
+                            schedule:[],
+                            color: 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
                         })
                     } else{
                         const o=_.find(schedules, function(o) { if(o.day.toString() === item.toString()){return o.id}; });
@@ -61,7 +60,8 @@ export default class TimeTable extends Component {
                         temp.push({
                             id:i+1,
                             day:item,
-                            schedule:schedules[o.id-1].schedule
+                            schedule:schedules[o.id-1].schedule,
+                            color: 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'
                         })
                     }
 

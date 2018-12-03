@@ -20,5 +20,6 @@ module.exports={
     studentTimeTable: '/timeTable/student/timeTable/schedule',
     studyMaterialStudent:'/studyMaterial/student/lectures',
     studyMaterialStudentSubject:'/studyMaterial/student/materials/',
-    studyMaterialRemove:'/studyMaterial/Media/'
+    studyMaterialRemove:'/studyMaterial/Media/',
+    studentAttendance: '/student/attendance'
 };

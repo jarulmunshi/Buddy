@@ -25,7 +25,7 @@ export default class Message extends Component{
         description: '',
         messageList: [],
         showAddMessage: false,
-        showFab: true
+        showFab: false
     }
 
     constructor(props){
@@ -43,20 +43,23 @@ export default class Message extends Component{
             if(res.success === 1){
                 this.setState({messageList: res.response})
             }
-            //await AsyncStorage.setItem("detail",JSON.stringify(res.data));
         }).catch((err)=>{
-            //console.log(err);
+
             Alert.alert(err.data.error);
         })
     };
 
     getRole = async () => {
-        // const userRole = await AsyncStorage.getItem("role")
         const userRole = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userRole);
         console.log("//////",userRole);
-        if(userRole.role === 'parent'){
+        if(userData.response.role === 'Parent'){
             this.setState({
                 showFab: true
+            })
+        }else {
+            this.setState({
+                showFab: false
             })
         }
     };

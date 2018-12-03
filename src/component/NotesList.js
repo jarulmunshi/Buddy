@@ -30,30 +30,33 @@ export default class NotesList extends Component {
         markDates:{},
         iName: 'bars',
         isBack: true,
-        notesDate: date.getFullYear()+"-"+(date.getMonth()+1)
+        notesDate: date.getFullYear()+"-"+(date.getMonth()+1),
+        attendanceData: []
     };
 
     componentDidMount = async () => {
         const userDetail = await AsyncStorage.getItem("detail");
         let userData = JSON.parse(userDetail);
-
+        let dateObj={};
+        let temp234 = [];
+        let obj=[],mtemp=[];
+        let tempmark=[];
         callApi(ApiConstant.baseUrl+ApiConstant.parentStudentAttendanceNotes,'get',{},
             {"Content-Type":"application/json","Authorization":userData.token}).then( (res)=> {
             console.log(res);
             if(res.success === 1){
-                const temp23= res.respones.map((item)=>{
+                temp234= res.respones.map((item)=>{
                     item.createdAt = moment(item.createdAt).format('YYYY-MM-DD')
                     return item;
                 })
-                const data=_.groupBy(temp23,'createdAt');
-                const obj=[],mtemp=[];
+                const data=_.groupBy(temp234,'createdAt');
+
                 const notList=Object.values(data);
                 const dates=Object.keys(data);
-                let dateObj={};
+
                 dates.map((item)=>{
                     dateObj[moment(item).format('YYYY-MM-DD')]={selected: false,marked: true, dotColor: 'green'}
                 })
-                dateObj[moment().format('YYYY-MM-DD')]={selected: true,marked: true, dotColor: 'green'}
                 notList.map((items)=>{
                     obj.push({
                         title:moment(items[0].createdAt).format('YYYY-MM-DD'),
@@ -67,12 +70,37 @@ export default class NotesList extends Component {
                         data: Object.values(temp)[1]
                     })
                 }
-                this.setState({notesList:temp23,dataList:mtemp,allData:obj,markDates:dateObj});
                 console.log(obj)
+                callApi(ApiConstant.baseUrl+ApiConstant.studentAttendance,'get',{},
+                    {"Content-Type":"application/json","Authorization":userData.token}).then( (res)=> {
+                    if(res.success === 1){
+                        let temp23= res.response.map((item)=>{
+                            item.createdAt = moment(item.createdAt).format('YYYY-MM-DD')
+                            return item;
+                        })
+                        let markAbsent =[];
+
+                        tempmark = dateObj;
+
+                        temp23.map(item=>{
+                            tempmark[moment(item.createdAt).format('YYYY-MM-DD')]={selected: true,marked: true, dotColor: 'green', selectedColor:'red'}
+                            markAbsent.push(moment(item.createdAt).format('YYYY-MM-DD'))//[moment(item.createdAt).format('YYYY-MM-DD')]={selected: true,marked: true, dotColor: 'green', selectedColor:'red'}
+                        })
+                        console.log(dateObj)
+                        tempmark[moment().format('YYYY-MM-DD')]={selected: true,marked: true, dotColor: 'green'}
+                        this.setState({
+                            markDates: tempmark,notesList:temp234,dataList:mtemp,allData:obj,attendanceData:markAbsent
+                        })
+                    }
+
+                }).catch((err)=>{
+                    Alert.alert(err.data.error);
+                })
             }
         }).catch((err)=>{
             Alert.alert(err.data.error);
         })
+
 
     }
 
@@ -100,15 +128,20 @@ export default class NotesList extends Component {
             let dateObj = {};
             if (date in this.state.markDates) {
                 const data = _.groupBy(this.state.notesList, 'createdAt');
+                debugger
                 const dates = Object.keys(data);
 
                 dates.map((item) => {
                     dateObj[item] = {selected: false, marked: true, dotColor: 'green'}
                 })
                 dateObj[date] = {selected: true, marked: true, dotColor: 'green'}
+                this.state.attendanceData.map(item=>{
+                    dateObj[item] = {selected: true,marked: true, dotColor: 'green', selectedColor:'red'}
+                })
             }
             let mtemp = [];
             const temp = _.find(this.state.allData, {'title': date})
+            debugger
             mtemp.push({
                 title: Object.values(temp)[0],
                 data: Object.values(temp)[1]
@@ -124,6 +157,9 @@ export default class NotesList extends Component {
 
             })
             dateObj[date] = {selected: true, marked: false, dotColor: 'green'}
+            this.state.attendanceData.map(item=>{
+                dateObj[item] = {selected: true,marked: true, dotColor: 'green', selectedColor:'red'}
+            })
             console.log(dateObj)
             this.setState({ dataList: [], markDates: dateObj, date: moment(date).format('YYYY-MM-DD') })
         }
