@@ -43,6 +43,7 @@ export default class File extends Component{
             deleteShow: false,
             flag:1,
             url:'',
+            load:0
         };
 
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -72,6 +73,7 @@ export default class File extends Component{
                     "content-type":'multipart/form-data',"Authorization":userData.token}).then( async (res)=> {
                     console.log("0123",res);
                     if(res.success === 1){
+                        this.setState({load:1});
                         console.log(res);
                     }else {
                         console.log(res);
@@ -120,7 +122,7 @@ export default class File extends Component{
             //Alert.alert(err.data.error);
         });
 
-    }
+    };
 
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
@@ -178,7 +180,7 @@ export default class File extends Component{
         // const filteredItems = this.state.classList.slice(0, i-1).concat(this.state.classList.slice(i, this.state.classList.length))
         //
         // this.setState({classList:filteredItems })
-    }
+    };
 
     downloadFile(id){
         RNFetchBlob

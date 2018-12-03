@@ -2,15 +2,15 @@ import React from 'react'
 import {
     Text,
     View,
-    Platform,
+    Platform
 } from 'react-native'
 import Switch from 'react-native-customisable-switch';
 
-import {Card, CardSection} from './Common'
+import {Card, CardSection,Spinner} from './Common'
 import {MyriadFont,WindowsWidth} from './global'
 
 const AttendanceList = (props) => {
-    const {id, Student_id, name, present} =props.notesInfo;
+    const { student_id, name, present} =props.notesInfo;
     const color = 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')';
     return(
         <Card>
@@ -18,13 +18,14 @@ const AttendanceList = (props) => {
                 <View style={[styles.colorView, {backgroundColor: color}]}></View>
 
                 <View style={styles.listContainerStyle}>
-                    <Text style={[styles.nameStyle, {width: WindowsWidth*0.1, padding: 10,}]}>{Student_id}</Text>
+                    <Text style={[styles.nameStyle, {width: WindowsWidth*0.1, padding: 10,}]}>{student_id}</Text>
 
                     <View style={styles.dataRow}>
                         <Text style={styles.nameStyle}>{name}</Text>
                         <Switch
                             defaultValue={true}
-                            value={present === undefined ? 1 : present}
+                            enable={props.disable}
+                            value={present}
                             activeText={'P'}
                             inactiveText={'A'}
                             activeTextColor={'#FFF'}
@@ -32,13 +33,13 @@ const AttendanceList = (props) => {
                             inactiveTextColor={'#FFF'}
                             inactiveBackgroundColor={'#AC0119'}
                             activeBackgroundColor={'#79AF1B'}
-                            onChangeValue={(value) => {
-                                props.toggleAttendance(id-1, present)
+                            onChangeValue={() => {
+                                props.toggleAttendance(student_id, present)
                             }}
                         />
                     </View>
-                </View>
 
+                </View>
             </CardSection>
         </Card>
     )

@@ -10,8 +10,17 @@ import {
 } from 'react-native'
 import FAB from 'react-native-fab'
 
-import {WindowsHeight, WindowsWidth,DisplayAreaView} from '../commonComponent/global';
-import {Header, Footer, CustomMenu, CalendarView, ClassNotesInfo, AddNote, AttendanceList} from '../commonComponent/Common'
+import {WindowsHeight, WindowsWidth, DisplayAreaView, MyriadFont} from '../commonComponent/global';
+import {
+    Header,
+    Footer,
+    CustomMenu,
+    CalendarView,
+    ClassNotesInfo,
+    AddNote,
+    AttendanceList,
+    Card, CardSection
+} from '../commonComponent/Common'
 import Color from '../helper/theme/Color'
 import {callApi} from "../services/ApiCall";
 import ApiConstant from "../services/ApiConstant";
@@ -52,16 +61,24 @@ export default class ManageClass extends Component{
         todayDate: date.getDate()+" "+monthShortName[date.getMonth()]+" "+date.getFullYear(),
         present: 0,
         absent: 0,
+        flag:1,
+        disable:1
     };
 
     componentWillMount = async () =>{
+        debugger;
         const userDetail = await AsyncStorage.getItem("detail");
         let userData = JSON.parse(userDetail);
         callApi(ApiConstant.baseUrl+ApiConstant.todayAttendance,'get',{},
             {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
+                debugger;
                 console.log(res);
             if(res.success === 1){
-                this.setState({attendanceList: res.response})
+                this.setState({
+                    attendanceList: res.response,
+                    present: res.response.filter(obj => obj.present === 1).length,
+                    absent: res.response.filter(obj => obj.present === 0).length
+                });
             }
         }).catch((err)=>{
             Alert.alert(err.data.error);
@@ -71,8 +88,8 @@ export default class ManageClass extends Component{
 
     componentDidMount(){
         this.setState({
-            present: this.state.attendanceList.filter((obj) => obj.present === true).length,
-            absent: this.state.attendanceList.filter((obj) => obj.present === false).length,
+            present: this.state.attendanceList.filter((obj) => obj.present === 1).length,
+            absent: this.state.attendanceList.filter((obj) => obj.present === 0).length,
         })
     };
 
@@ -96,16 +113,40 @@ export default class ManageClass extends Component{
         })
     }
 
-    toggleSwitch(id, value){
+    toggleSwitch=async (id, value)=>{
+        const data={
+            student_id:id,
+            present:!value
+        };
         let newState = Object.assign({}, this.state);
-        newState.attendanceList[id].present = !value;
+        debugger;
+        newState.attendanceList.map((data, index) => {
+            if(data.student_id === id) {
+                newState.attendanceList[index].present = !value;
+            }
+        });
         this.setState(newState);
+        const userDetail = await AsyncStorage.getItem("detail");
+        let userData = JSON.parse(userDetail);
+        callApi(ApiConstant.baseUrl+ApiConstant.todayAttendance,'post',data,
+            {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
+            console.log(res);
+            if(res.success === 1){
+                debugger;
+                this.setState({
+                    attendanceList: res.response
+                })
+            }
+        }).catch((err)=>{
+            Alert.alert(err.data.error);
+        });
 
+        debugger;
         this.setState({
-            present: this.state.attendanceList.filter((obj) => obj.present === true).length,
-            absent: this.state.attendanceList.filter((obj) => obj.present === false).length,
+            present: this.state.attendanceList.filter((obj) => obj.present === 1 || obj.present === true).length,
+            absent: this.state.attendanceList.filter((obj) => obj.present === 0 || obj.present === false).length,
         })
-    }
+    };
 
     renderClassNotes(){
         return this.state.notesList.map(notes =>
@@ -118,6 +159,7 @@ export default class ManageClass extends Component{
             <AttendanceList key={attendance.id}
                             notesInfo={attendance}
                             toggleAttendance={(id, value) => this.toggleSwitch(id, value)}
+                            disable={this.state.disable}
             />
         )
     }
@@ -133,7 +175,7 @@ export default class ManageClass extends Component{
             {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
             if(res.data.success === 1)
             {
-                this.setState({notesList: [ ...this.state.notesList,res.data.response]})
+                this.setState({notesList: [res.data.response, ...this.state.notesList]})
             }
         }).catch((err)=>{
             //console.log(err);
@@ -159,6 +201,30 @@ export default class ManageClass extends Component{
     };
 
     changeDate=async (day, month, year)=>{
+        debugger;
+        if(day < 10){
+            day = "0" + day;
+            console.log()
+        }else if(month < 10){
+            month ="0" + month;
+        }
+        var d=date.getDate();
+        var m=[date.getMonth() + 1];
+        if(d < 10)
+        {
+            d= "0" + d;
+        }else if(m < 10){
+            m ="0" + m;
+        }
+        const tDate= d +"-"+ m +'-'+date.getFullYear();
+        const dateSelect = day +"-"+month+"-"+year;
+        console.log(typeof(tDate),typeof(dateSelect));
+        if(tDate === dateSelect ){
+            debugger;
+            this.setState({disable:1});
+        }else {
+            this.setState({disable:0});
+        }
         this.setState({
             todayDate: day+" "+monthShortName[month-1]+" "+year,
             dateToday: year+"-"+month+"-"+day,
@@ -168,14 +234,43 @@ export default class ManageClass extends Component{
         let userData = JSON.parse(userDetail);
         callApi(ApiConstant.baseUrl+ApiConstant.dateWiseAttendance + `${this.state.dateToday}`,'get',{},
             {"Content-Type":"application/json","Authorization":userData.token}).then( async (res)=> {
-            console.log(res);
+            console.log("res",res);
              if(res.success === 1){
-                 this.setState({attendanceList: res.response})
+                 this.setState({flag:1});
+                 this.setState({
+                     attendanceList: res.response,
+                     present: res.response.filter(obj => obj.present === 1).length,
+                     absent: res.response.filter(obj => obj.present === 0).length
+
+                 })
+             }else if(res.success ===0){
+                 this.setState({flag:0});
+                 console.log("No data");
+             }
+             else {
+                 debugger;
+                 console.log(res.error);
              }
         }).catch((err)=>{
             Alert.alert(err.data.error);
         })
 
+    };
+
+    renderEmptySection = () =>{
+        return(
+            <View style={{marginTop: 20}}>
+                <Card>
+                    <CardSection>
+                        <View style={[styles.colorView, {backgroundColor: 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'}]}/>
+
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.standardContainer}>No Data Available</Text>
+                        </View>
+                    </CardSection>
+                </Card>
+            </View>
+        )
     };
 
     render(){
@@ -225,7 +320,7 @@ export default class ManageClass extends Component{
                                     </View>
                                 </View>
                                 <ScrollView style={{marginTop: 10}}>
-                                    {this.renderAttendanceList()}
+                                    {this.state.flag?this.renderAttendanceList():this.renderEmptySection()}
                                 </ScrollView>
                             </View>
                     }
@@ -247,7 +342,8 @@ export default class ManageClass extends Component{
                     (this.state.showCalendar) &&
                     <CalendarView
                         toggle={() => this.hideCalendar()}
-                        changeDate={(day,month,year) => this.changeDate(day, month, year)}
+                        changeDate={(day,month,year) =>
+                        {this.changeDate(day, month, year)}}
                     />
                 }
 
@@ -304,4 +400,22 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center'
     },
-}
+    colorView: {
+        width: 2,
+    },
+    infoContainer: {
+        padding: 10,
+        width: WindowsWidth
+    },
+    additionalInfoContainer: {
+        padding: 10,
+        width: WindowsWidth * 45 /100
+    },
+    standadContainer: {
+        color: 'rgb(7, 7, 7)',
+        fontSize: 20,
+        width: WindowsWidth ,
+        fontFamily: MyriadFont
+    },
+
+};

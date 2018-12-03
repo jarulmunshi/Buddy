@@ -8,12 +8,14 @@ import { Calendar} from 'react-native-calendars';
 import {WindowsHeight, WindowsWidth} from '../commonComponent/global';
 
 const CalendarView = (props) => {
+    var d=new Date();
     return(
         <TouchableOpacity  style={styles.viewContainer} onPress={props.toggle}>
             <View>
                 <Calendar
                     style={{width:WindowsWidth-50, marginLeft: 25, marginRight: 25}}
                     onDayPress={(day) => {props.changeDate(day.day, day.month, day.year)}}
+                    maxDate={d}
                 />
             </View>
         </TouchableOpacity>

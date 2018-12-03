@@ -13,6 +13,7 @@ const TimeTableList = (props) => {
     const {start_time, end_time, subject, name} =props.timeTable;
     const color='rgba(' + Math.round(Math.random() * 255) + ','
         + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ', 0.15)';
+    debugger;
     return(
          <View style={styles.listContainer}>
             <View style={[styles.containerStyle, {backgroundColor: color}]}>
@@ -47,6 +48,6 @@ const styles = {
         paddingRight: 20,
         backgroundColor: '#FFF'
     }
-}
+};
 
 export {TimeTableList}

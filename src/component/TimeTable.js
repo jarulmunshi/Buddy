@@ -11,7 +11,7 @@ import {
 import Accordion from 'react-native-collapsible/Accordion';
 
 import Color from '../helper/theme/Color'
-import {WindowsHeight, WindowsWidth, DisplayAreaView} from '../commonComponent/global';
+import {WindowsHeight, WindowsWidth, DisplayAreaView, MyriadFont} from '../commonComponent/global';
 import {Header, Footer, TimeTableList, Card, CardSection} from '../commonComponent/Common';
 import {callApi} from "../services/ApiCall";
 import ApiConstant from "../services/ApiConstant";
@@ -26,7 +26,8 @@ export default class TimeTable extends Component {
         active: [],
         collapsed: false,
         timeTable: [],
-        isExpanded: null
+        isExpanded: null,
+        flag:1
     };
 
     componentDidMount = async() =>{
@@ -65,32 +66,7 @@ export default class TimeTable extends Component {
                     }
 
                 })
-                debugger
-                // dayList.map((item,i) => {
-                //     schedules.push({
-                //         id:i+1,
-                //         day:item[0],
-                //         schedule:item[1]
-                //     })
-                // });
 
-                // let timeTableData=[];
-                // _.forEach(schedules,(item,i)=>{
-                //     if(_.includes(schedules,daysArray)){
-                //         timeTableData.push({
-                //             id:i+1,
-                //             day:item[0],
-                //             schedule: item[1]
-                //         })
-                //     }else {
-                //         timeTableData.push({
-                //             id:i+1,
-                //             day:item[0],
-                //             schedule: null
-                //         })
-                //     }
-                // });
-                //console.log(timeTableData);
                 debugger;
                this.setState({timeTable: temp});
 
@@ -148,22 +124,35 @@ export default class TimeTable extends Component {
 
     onExapand =(schedule, index) => {
         debugger;
-        this.myFlatlist.scrollToOffset({viewPosition:0,y:0, animated: true})
+        this.myFlatlist.scrollToOffset({viewPosition:0,y:0, animated: true});
        // this.myFlatlist.scrollToIndex({index:index,animated:true})
         return schedule.map(data =>
             <TimeTableList timeTable={data}/>
         )
-    }
+    };
 
     _renderContent = timeTable => {
         if(timeTable.schedule.length > 0){
-            console.log(timeTable.schedule.length);
+            //console.log(timeTable.schedule.length);
+            return timeTable.schedule.map(data =>
+                <TimeTableList timeTable={data}/>
+            )
         }else {
-            console.log(timeTable.schedule.length);
+            //console.log(timeTable.schedule.length);
+            return(
+                <View style={{marginTop: 10}}>
+                    <Card>
+                        <CardSection>
+                            <View style={[styles.colorView, {backgroundColor: 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'}]}/>
+
+                            <View style={styles.infoContainer}>
+                                <Text style={styles.standardContainer}>No Schedule Available</Text>
+                            </View>
+                        </CardSection>
+                    </Card>
+                </View>
+            )
         }
-        return timeTable.schedule.map(data =>
-            <TimeTableList timeTable={data}/>
-        )
     };
 
     _updateSections = active => {
@@ -229,4 +218,14 @@ const styles = {
     colorView: {
         width: 3,
     },
+    infoContainer: {
+        padding: 10,
+        width: WindowsWidth
+    },
+    standadContainer: {
+        color: 'rgb(7, 7, 7)',
+        fontSize: 20,
+        width: WindowsWidth ,
+        fontFamily: MyriadFont
+    }
 }
