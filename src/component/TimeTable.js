@@ -124,8 +124,8 @@ export default class TimeTable extends Component {
 
     onExapand =(schedule, index) => {
         debugger;
-        this.myFlatlist.scrollToOffset({viewPosition:0,y:0, animated: true});
-       // this.myFlatlist.scrollToIndex({index:index,animated:true})
+        //this.myFlatlist.scrollToOffset({viewPosition:0,y:0, animated: true});
+        //this.myFlatlist.scrollToIndex({index:index,animated:true})
         return schedule.map(data =>
             <TimeTableList timeTable={data}/>
         )
@@ -133,23 +133,15 @@ export default class TimeTable extends Component {
 
     _renderContent = timeTable => {
         if(timeTable.schedule.length > 0){
-            //console.log(timeTable.schedule.length);
             return timeTable.schedule.map(data =>
                 <TimeTableList timeTable={data}/>
             )
         }else {
-            //console.log(timeTable.schedule.length);
             return(
-                <View style={{marginTop: 10}}>
-                    <Card>
-                        <CardSection>
-                            <View style={[styles.colorView, {backgroundColor: 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')'}]}/>
-
-                            <View style={styles.infoContainer}>
-                                <Text style={styles.standardContainer}>No Schedule Available</Text>
-                            </View>
-                        </CardSection>
-                    </Card>
+                <View style={styles.listContainer}>
+                    <View style={[styles.containerStyle]}>
+                        <Text style={styles.standardContainer}>No Schedule Available</Text>
+                    </View>
                 </View>
             )
         }
@@ -227,5 +219,19 @@ const styles = {
         fontSize: 20,
         width: WindowsWidth ,
         fontFamily: MyriadFont
-    }
+    },
+    listContainer: {
+        width: WindowsWidth,
+        paddingLeft: 20,
+        paddingRight: 20,
+        backgroundColor: '#FFF'
+    },
+    containerStyle: {
+        width: WindowsWidth-40,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 10,
+        marginBottom: 5,
+        marginTop: 5
+    },
 }
